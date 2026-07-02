@@ -1,15 +1,42 @@
+# Android/Gradle
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
+.gradle/
+local.properties
 /build
 /captures
 .externalNativeBuild
 .cxx
-local.properties
+*.apk
+*.aar
+*.jks
+*.keystore
+
+# Kotlin
+.kotlin/
+kotlin-daemon-embeddable-*.jar
+
+# IDE - IntelliJ / Android Studio
+.idea/
+*.iws
+*.ipr
+/out/
+
+# Node.js - Backend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.test
+.env.local
+
+# Database / Logs
+*.log
+mongo-data/
+
+# OS / Misc
+.DS_Store
+Thumbs.db
+desktop.ini
+.swp
+*~
