@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.*
 import org.json.JSONObject
 import java.io.IOException
+import java.util.Locale
 import kotlin.math.*
 
 /**
@@ -39,7 +40,7 @@ class RoutesActivity : AppCompatActivity() {
         /** Radius of the Earth in kilometers. */
         private const val EARTH_RADIUS_KM = 6372.8
         /** Threshold distance in meters to consider the bus as having arrived at a stop. */
-        private const val ARRIVAL_THRESHOLD_METERS = 10.0
+        private const val ARRIVAL_THRESHOLD_METERS = 50.0
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +67,6 @@ class RoutesActivity : AppCompatActivity() {
                 if (location != null) {
                     updateCurrentLocation(location)
                 } else {
-                    // If last location is null, request a fresh one
                     fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                         .addOnSuccessListener { freshLocation ->
                             updateCurrentLocation(freshLocation)
@@ -134,9 +134,6 @@ class RoutesActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
     }
 
-    /**
-     * Loads bus stop information from assets and initializes the stops list.
-     */
     private fun loadStopsFromJson(): List<RouteStop> {
         val stops = mutableListOf<RouteStop>()
         try {
@@ -153,9 +150,10 @@ class RoutesActivity : AppCompatActivity() {
                 stops.add(
                     RouteStop(
                         name = name,
-                        status = "DISTANCE: --",
+                        status = "WAITING FOR GPS...",
                         address = "$name Station Area",
-                        isCurrent = false,
+                        isReached = false,
+                        isNearest = false,
                         latitude = lat,
                         longitude = lon
                     )
@@ -167,9 +165,6 @@ class RoutesActivity : AppCompatActivity() {
         return stops
     }
 
-    /**
-     * Initializes the location provider and starts listening for updates.
-     */
     private fun initLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationCallback = object : LocationCallback() {
@@ -190,30 +185,39 @@ class RoutesActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Updates the UI list based on the current GPS location.
-     * Highlights the stop if the bus is within the arrival threshold.
-     */
     @SuppressLint("NotifyDataSetChanged")
     private fun updateCurrentLocation(location: android.location.Location?) {
         if (location == null) return
 
-        var changed = false
+        var nearestIndex = -1
+        var minDistance = Double.MAX_VALUE
+        val distances = DoubleArray(stopsList.size)
+
         for (i in stopsList.indices) {
             val stop = stopsList[i]
             val distanceKm = haversine(location.latitude, location.longitude, stop.latitude, stop.longitude)
-            val distanceMeters = distanceKm * 1000
+            distances[i] = distanceKm * 1000
+            if (distances[i] < minDistance) {
+                minDistance = distances[i]
+                nearestIndex = i
+            }
+        }
 
-            val isNear = distanceMeters <= ARRIVAL_THRESHOLD_METERS
+        var changed = false
+        for (i in stopsList.indices) {
+            val stop = stopsList[i]
+            val distanceMeters = distances[i]
+            val reached = distanceMeters <= ARRIVAL_THRESHOLD_METERS
+            val nearest = (i == nearestIndex)
+            
             val statusText = if (distanceMeters < 1000) {
-                "DISTANCE: ${distanceMeters.toInt()}m"
+                String.format(Locale.getDefault(), "DISTANCE: %.0fm", distanceMeters)
             } else {
-                "DISTANCE: ${String.format("%.2f", distanceKm)}km"
+                String.format(Locale.getDefault(), "DISTANCE: %.2fkm", distanceMeters / 1000)
             }
 
-            // Only update and notify if there's a visible change
-            if (stop.isCurrent != isNear || stop.status != statusText) {
-                stopsList[i] = stop.copy(isCurrent = isNear, status = statusText)
+            if (stop.isReached != reached || stop.isNearest != nearest || stop.status != statusText) {
+                stopsList[i] = stop.copy(isReached = reached, isNearest = nearest, status = statusText)
                 changed = true
             }
         }
@@ -223,9 +227,6 @@ class RoutesActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Calculates the distance between two points using the Haversine formula.
-     */
     private fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         val dLat = Math.toRadians(lat2 - lat1)
         val dLon = Math.toRadians(lon2 - lon1)
@@ -238,17 +239,12 @@ class RoutesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        // Security Check: If token was cleared (e.g. by another device login), return to Login
         val prefs = getSharedPreferences("TransitProSession", MODE_PRIVATE)
         if (prefs.getString("jwt_token", "").isNullOrEmpty()) {
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+            startActivity(Intent(this, LoginActivity::class.java).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK })
             finish()
             return
         }
-
         startLocationUpdates()
     }
 
@@ -265,12 +261,13 @@ data class RouteStop(
     val name: String,
     var status: String,
     val address: String,
-    var isCurrent: Boolean,
+    var isReached: Boolean,
+    var isNearest: Boolean,
     val latitude: Double,
     val longitude: Double
 ) {
-    // Helper to create a copy with updated state
-    fun copy(isCurrent: Boolean, status: String) = RouteStop(name, status, address, isCurrent, latitude, longitude)
+    fun copy(isReached: Boolean, isNearest: Boolean, status: String) = 
+        RouteStop(name, status, address, isReached, isNearest, latitude, longitude)
 }
 
 /**
@@ -296,20 +293,26 @@ class RoutesAdapter(private val stops: List<RouteStop>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val stop = stops[position]
         holder.stopName.text = stop.name
-        holder.arrivalStatus.text = stop.status
         holder.stopAddress.text = stop.address
 
-        if (stop.isCurrent) {
+        if (stop.isReached) {
             holder.iconContainer.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.accent_blue)
             holder.stopIcon.setImageResource(R.drawable.ic_bus)
             holder.stopIcon.imageTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.white)
             holder.arrivalStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.accent_blue))
-            holder.arrivalStatus.text = "BUS REACHED STOP"
+            holder.arrivalStatus.text = "BUS AT STOP (${stop.status})"
+        } else if (stop.isNearest) {
+            holder.iconContainer.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.accent_orange)
+            holder.stopIcon.setImageResource(R.drawable.ic_route)
+            holder.stopIcon.imageTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.white)
+            holder.arrivalStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.accent_orange))
+            holder.arrivalStatus.text = "NEAREST STOP (${stop.status})"
         } else {
             holder.iconContainer.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.grey_light)
-            holder.stopIcon.setImageResource(R.drawable.status_indicator_green) // Default dot
+            holder.stopIcon.setImageResource(R.drawable.status_indicator_green)
             holder.stopIcon.imageTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.text_secondary)
             holder.arrivalStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.text_secondary))
+            holder.arrivalStatus.text = stop.status
         }
     }
 

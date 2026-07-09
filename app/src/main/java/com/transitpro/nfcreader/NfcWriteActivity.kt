@@ -14,8 +14,16 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.transitpro.nfcreader.api.RetrofitClient
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
+/**
+ * Activity for configuring passenger NFC cards with encrypted IDs.
+ */
 class NfcWriteActivity : AppCompatActivity() {
 
     private lateinit var etNfcData: EditText
@@ -25,6 +33,7 @@ class NfcWriteActivity : AppCompatActivity() {
     private lateinit var statusContainer: LinearLayout
     private var nfcAdapter: NfcAdapter? = null
     private var isWaitingForTag = false
+    private var dataToWrite: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,36 +61,56 @@ class NfcWriteActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 val words = s.toString().trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
-                val wordCount = words.size
-                tvWordCount.text = "Words: $wordCount/20"
-                if (wordCount > 20) {
-                    tvWordCount.setTextColor(resources.getColor(R.color.accent_red, null))
-                } else {
-                    tvWordCount.setTextColor(resources.getColor(R.color.text_secondary, null))
-                }
+                tvWordCount.text = "Words: ${words.size}/20"
             }
         })
 
         btnUpdateNfc.setOnClickListener {
-            val text = etNfcData.text.toString().trim()
-            val words = text.split(Regex("\\s+")).filter { it.isNotEmpty() }
+            val plainNfcId = etNfcData.text.toString().trim()
             
-            if (text.isEmpty()) {
-                Toast.makeText(this, "Please enter some text", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            
-            if (words.size > 20) {
-                Toast.makeText(this, "Limit reached: Maximum 20 words", Toast.LENGTH_SHORT).show()
+            if (plainNfcId.isEmpty()) {
+                Toast.makeText(this, "Please enter a valid NFC ID", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            isWaitingForTag = true
-            statusContainer.visibility = View.VISIBLE
-            btnUpdateNfc.isEnabled = false
-            etNfcData.isEnabled = false
-            Toast.makeText(this, "Tap a card to update", Toast.LENGTH_SHORT).show()
+            // Step 1: Request encryption from backend
+            encryptAndPrepareWrite(plainNfcId)
         }
+    }
+
+    private fun encryptAndPrepareWrite(nfcId: String) {
+        btnUpdateNfc.isEnabled = false
+        etNfcData.isEnabled = false
+
+        val request = mapOf("nfcId" to nfcId)
+        RetrofitClient.getInstance(this).encryptNfcId(request).enqueue(object : Callback<Map<String, String>> {
+            override fun onResponse(call: Call<Map<String, String>>, response: Response<Map<String, String>>) {
+                if (response.isSuccessful) {
+                    dataToWrite = response.body()?.get("encryptedId")
+                    if (!dataToWrite.isNullOrEmpty()) {
+                        isWaitingForTag = true
+                        statusContainer.visibility = View.VISIBLE
+                        Toast.makeText(this@NfcWriteActivity, "Backend encrypted successfully. Tap card to write.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        showError("Invalid response from server")
+                    }
+                } else {
+                    val errorMsg = response.errorBody()?.string()?.let {
+                        try { JSONObject(it).getString("message") } catch (e: Exception) { null }
+                    } ?: "Encryption failed: ${response.code()}"
+                    showError(errorMsg)
+                }
+            }
+
+            override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
+                showError("Network Error: ${t.message}")
+            }
+        })
+    }
+
+    private fun showError(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+        resetStatus()
     }
 
     private fun setupHeader() {
@@ -98,7 +127,8 @@ class NfcWriteActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val intent = Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
+        val flags = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else PendingIntent.FLAG_UPDATE_CURRENT
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, flags)
         val filters = arrayOf(IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED))
         nfcAdapter?.enableForegroundDispatch(this, pendingIntent, filters, null)
     }
@@ -110,14 +140,14 @@ class NfcWriteActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (isWaitingForTag && (intent.action == NfcAdapter.ACTION_TAG_DISCOVERED || 
-            intent.action == NfcAdapter.ACTION_NDEF_DISCOVERED ||
-            intent.action == NfcAdapter.ACTION_TECH_DISCOVERED)) {
-            
-            val tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
-            if (tag != null) {
-                writeToTag(tag, etNfcData.text.toString().trim())
+        if (isWaitingForTag) {
+            val tag: Tag? = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(NfcAdapter.EXTRA_TAG, Tag::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
             }
+            tag?.let { writeToTag(it, dataToWrite!!) }
         }
     }
 
@@ -132,7 +162,6 @@ class NfcWriteActivity : AppCompatActivity() {
         try {
             val record = NdefRecord.createTextRecord("en", data)
             val message = NdefMessage(arrayOf(record))
-            
             ndef.connect()
             if (!ndef.isWritable) {
                 Toast.makeText(this, "Tag is read-only", Toast.LENGTH_SHORT).show()
@@ -140,21 +169,11 @@ class NfcWriteActivity : AppCompatActivity() {
                 resetStatus()
                 return
             }
-            
-            if (ndef.maxSize < message.toByteArray().size) {
-                Toast.makeText(this, "Data too large for this card", Toast.LENGTH_SHORT).show()
-                ndef.close()
-                resetStatus()
-                return
-            }
-
             ndef.writeNdefMessage(message)
-            Toast.makeText(this, "Card updated successfully!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Card configured with encrypted ID!", Toast.LENGTH_LONG).show()
             resetStatus()
-            
         } catch (e: Exception) {
-            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-            e.printStackTrace()
+            Toast.makeText(this, "Write failed: ${e.message}", Toast.LENGTH_SHORT).show()
             resetStatus()
         } finally {
             try { ndef.close() } catch (e: Exception) {}
@@ -166,5 +185,6 @@ class NfcWriteActivity : AppCompatActivity() {
         statusContainer.visibility = View.GONE
         btnUpdateNfc.isEnabled = true
         etNfcData.isEnabled = true
+        dataToWrite = null
     }
 }

@@ -15,11 +15,14 @@ interface ApiService {
     fun login(@Body request: LoginRequest): Call<LoginResponse>
 
     @POST("api/bus/tap")
-    fun sendTap(@Body request: TapRequest): Call<TapResponse>
+    fun sendTap(@Body request: Map<String, @JvmSuppressWildcards Any>): Call<TapResponse>
 
     @GET("api/bus/history")
     fun getHistory(): Call<List<TapLog>>
 
     @POST("api/bus/logout")
     fun logout(@retrofit2.http.Header("Authorization") authHeader: String): Call<Void>
+
+    @POST("api/bus/tools/encrypt-nfcid")
+    fun encryptNfcId(@Body request: Map<String, String>): Call<Map<String, String>>
 }

@@ -1,87 +1,61 @@
 # TransitPro: Smart NFC Transit System
 
-TransitPro is a comprehensive NFC-based transit management system designed to modernize public transportation. It consists of an Android application for bus conductors/drivers and a robust Node.js backend for secure transaction processing and real-time tracking.
+TransitPro is a secure, NFC-based public transportation management system. It features an Android application for bus conductors/drivers and a robust Node.js backend (`nfc-backend`) that handles encrypted transaction processing, real-time tracking, and automated fare calculation.
 
-## Key Features
+## 🚀 Recent Updates (Weekly Log)
 
-### Android Application
-*   **NFC Tap Processing**: Real-time reading of passenger transit cards to handle "Tap-In" and "Tap-Out" events.
-*   **Dynamic Fare Calculation**: Automatically calculates fares based on distance traveled using the **Haversine Formula**.
-*   **GPS Tracking & Stop Detection**: Identifies the nearest bus stop dynamically. When the bus is within 10 meters of a stop, the UI updates to show the bus has reached that location.
-*   **NFC Tools**: Includes an NFC Scanner to read card data and an NFC Writer to configure new passenger IDs.
-*   **Secure Authentication**: Strict single-device login policy. Logging in on a new device automatically invalidates the session on the previous device.
-*   **History & Reports**: View a detailed log of all transactions and export them as professional PDF documents.
+This week, the system underwent significant security and architecture upgrades:
 
-### Backend System
-*   **Secure API**: RESTful API built with Express.js, protected by JWT (JSON Web Tokens).
-*   **Session Management**: Database-backed session tracking that records every login and logout with timestamps.
-*   **Server-Side Revocation**: Provides the ability to instantly kill a session, enhancing security against token theft.
-*   **Audit Trail**: Maintains logs of all passenger taps and bus movements for administrative review.
+*   **🛡️ Encrypted NFC Ecosystem**: Implemented **AES-256-CBC** encryption for passenger IDs. Data written to physical cards is now secure and unreadable without backend keys.
+*   **🔌 Backend Integration**: Successfully merged the standalone bus backend into the main `NFC-CAPSTONE` project. All transit logic is now modularized under the `/api/bus` prefix.
+*   **🔒 Strict Session Security**: 
+    *   Implemented a **Block-Strategy** single-device policy (one active login per bus).
+    *   Added a strict **1-hour session expiration** to ensure security during shifts.
+    *   Enabled **Server-Side Revocation**, validating every API request against the database active-session status.
+*   **📍 Dynamic Route Tracking**: 
+    *   Upgraded the Routes UI with dual-state tracking.
+    *   Added a **Nearest Stop** indicator (Orange) and a **Bus at Stop** arrival status (Blue, 50m threshold).
+    *   Optimized GPS polling with the **Haversine Formula** for mathematical precision.
+*   **📝 Passenger ID System**: 
+    *   Automated unique **UserId** and **NFCID** generation during passenger registration.
+    *   Integrated passenger verification into the NFC Writer to prevent configuring cards for non-existent users.
+*   **🏗️ Database Isolation**: Created dedicated MongoDB collections (`bususers`, `bussessions`, `bustaps`, `bustrips`) to ensure total data separation from the main system.
 
-## Architecture & Technology Stack
+## 📱 Android Features
+*   **Encrypted Tapping**: Securely processes Tap-In/Out events with real-time passenger validation.
+*   **Intelligent UI**: Home screen automatically resets after taps to minimize conductor error.
+*   **NFC Tools**: Includes a secure card writer (with backend encryption) and a diagnostic NFC scanner.
+*   **Reports**: Generates professional PDF trip history reports for administrative auditing.
 
-### Frontend (Android)
-*   **Language**: Kotlin
-*   **Networking**: Retrofit 2 & OkHttp 3
-*   **Location**: Google Play Services (Fused Location Provider)
-*   **NFC**: Android NFC Adapter (NDEF & Tech Discovered)
-*   **UI**: Material Design, CardViews, Lottie-style animations, and RecyclerViews.
+## 🛠️ Backend Architecture (nfc-backend)
+*   **Framework**: Express.js with a modular route structure.
+*   **Security**: JWT for stateless authentication + Database-backed session validation.
+*   **Encryption**: Node.js `crypto` module for AES-256 handling.
+*   **Database**: MongoDB Atlas for persistence and SQLite for local caching.
 
-### Backend
-*   **Environment**: Node.js
-*   **Framework**: Express.js
-*   **Database**: MongoDB (Atlas) with Mongoose ODM
-*   **Security**: JWT for stateless auth with database-side validation.
+## 📋 System Requirements
+*   **Android**: NFC-enabled device running Android 8.0+.
+*   **Server**: Node.js 16+ and access to the `nfc-system` MongoDB cluster.
 
-## System Requirements
-*   **Android**: Device with NFC hardware support and Android 8.0 (Oreo) or higher.
-*   **Server**: Node.js 16+ and a MongoDB cluster.
+## ⚙️ Setup & Configuration
 
-## Setup & Installation
+### 1. Backend (.env)
+```env
+PORT=3000
+MONGO_URI=mongodb+srv://.../nfc-system
+JWT_SECRET=your_jwt_secret
+NFC_ENCRYPTION_KEY=your_aes_key
+```
 
-### Backend Setup
-1.  Navigate to the `backend/` directory.
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
-3.  Configure environment variables in `.env`:
-    ```env
-    MONGODB_URI=your_mongodb_connection_string
-    JWT_SECRET=your_secret_key
-    PORT=5000
-    ```
-4.  Start the server:
-    ```bash
-    npm run dev
-    ```
+### 2. Android App (RetrofitClient.kt)
+```kotlin
+private const val BASE_URL = "http://your_server_ip:3000/"
+```
 
-### Android App Setup
-1.  Open the project in Android Studio.
-2.  Configure the API endpoint in `RetrofitClient.kt`:
-    ```kotlin
-    private const val BASE_URL = "http://your_server_ip:5000/"
-    ```
-3.  Ensure the Android device and the server are on the same network (or use a public URL/tunnel).
-4.  Build and Run the application.
-
-## Project Structure
-*   `app/src/main/java/.../nfcreader/`
-    *   `MainActivity.kt`: Core NFC reading and tap logic.
-    *   `RoutesActivity.kt`: Real-time tracking and stop detection.
-    *   `HistoryActivity.kt`: Transaction logs and PDF generation.
-    *   `SettingsActivity.kt`: App configuration and NFC Scanner.
-    *   `NfcWriteActivity.kt`: Passenger ID configuration tool.
-*   `backend/`
-    *   `middleware/auth.js`: Security gatekeeper for API calls.
-    *   `routes/auth.js`: Handles Login/Logout and session invalidation.
-    *   `routes/taps.js`: Processes transit transactions.
-    *   `models/Session.js`: Database schema for tracking active devices.
-
-## Security Measures
-*   **Single Device Policy**: Prevents concurrent logins with the same ID.
-*   **Database Validation**: Validates the token's active status in the database on every request, allowing for immediate session revocation.
-*   **Haversine Precision**: Prevents fare fraud by using mathematical geolocation validation instead of relying solely on user-reported stops.
+## 🛡️ Security Measures
+1.  **Card Encryption**: Plain-text IDs never touch the physical card.
+2.  **Anti-Fraud**: Mathematical Haversine verification prevents manual stop entry errors.
+3.  **Session Kill**: Logging out on the app instantly invalidates the token on the server.
 
 ---
 Developed by Grison Maharjan
