@@ -30,6 +30,8 @@ const STORAGE_KEYS = {
 
 const createPublicUser = (account) => ({
   id: account.id,
+  userId: account.userId || ('USR-' + Math.random().toString(16).slice(2, 10).toUpperCase()),
+  nfcUid: account.nfcUid || ('NFC-' + Math.random().toString(16).slice(2, 10).toUpperCase()),
   fullName: account.fullName,
   email: account.email,
   mobileNumber: account.mobileNumber,
@@ -46,7 +48,7 @@ const saveStoredAccounts = (accounts) =>
   AsyncStorage.setItem(STORAGE_KEYS.accounts, JSON.stringify(accounts));
 
 // ============ API CONFIGURATION ============
-const API_BASE_URL = 'http://192.168.1.100:3000/api/v1'; // Change this!
+const API_BASE_URL = 'http://192.168.1.70:3000/api/v1';
 
 // Mock API - Replace with actual API calls
 const api = {
@@ -57,6 +59,8 @@ const api = {
       const identifier = normalizeIdentifier(data.identifier || data.mobileNumber || data.email);
       const demoAccount = {
         id: 1,
+        userId: 'USR-DEMO1234',
+        nfcUid: 'NFC-B1C2D3E4',
         fullName: 'Test User',
         email: 'test@example.com',
         mobileNumber: '9800000000',
@@ -89,8 +93,14 @@ const api = {
         normalizeIdentifier(item.email) === email ||
         normalizeIdentifier(item.mobileNumber) === mobileNumber
       );
+
+      const newUserId = 'USR-' + Math.random().toString(16).slice(2, 10).toUpperCase();
+      const newNfcUid = 'NFC-' + Math.random().toString(16).slice(2, 10).toUpperCase();
+
       const account = {
         id: existingIndex >= 0 ? accounts[existingIndex].id : Date.now(),
+        userId: existingIndex >= 0 ? accounts[existingIndex].userId : newUserId,
+        nfcUid: existingIndex >= 0 ? accounts[existingIndex].nfcUid : newNfcUid,
         fullName: data.fullName.trim(),
         email: data.email.trim(),
         mobileNumber: data.mobileNumber.trim(),
@@ -196,7 +206,7 @@ const AuthProvider = ({ children }) => {
       const response = await api.post('/auth/register', userData);
       if (response.success) {
         await saveSession(response.data.token, response.data.user);
-        return { success: true };
+        return { success: true, user: response.data.user };
       }
       return { success: false, error: 'Registration failed' };
     } catch (error) {
@@ -364,7 +374,11 @@ const RegisterScreen = ({ navigation }) => {
 
     const result = await register(form);
     if (result.success) {
-      Alert.alert(t('common.success'), t('errors.registration_success'));
+      Alert.alert(
+        'Registration Successful',
+        `Welcome to TransitPro!\n\nYour Unique IDs:\nUserId: ${result.user.userId}\nNFCID: ${result.user.nfcUid}\n\nPlease keep these safe.`,
+        [{ text: 'Login Now', onPress: () => navigation.navigate('Login') }]
+      );
     } else {
       Alert.alert(t('common.error'), t('errors.registration_failed'));
     }
@@ -637,7 +651,7 @@ const DashboardScreen = ({ navigation }) => {
   const { user, logout } = useAuth();
   const { t } = useLanguage();
   const [balance, setBalance] = useState(1250);
-  const [cardNumber, setCardNumber] = useState('**** **** **** 5678');
+  const [cardNumber, setCardNumber] = useState('N/A');
   const [lastRechargeDate, setLastRechargeDate] = useState('Jun 1, 2024');
   const [transactions, setTransactions] = useState([]);
   const [monthlyStats, setMonthlyStats] = useState({ totalTrips: 0, totalSpent: 0, mostUsedRoute: 'N/A' });
@@ -657,7 +671,7 @@ const DashboardScreen = ({ navigation }) => {
       
       if (walletRes.success) {
         setBalance(walletRes.data.balance);
-        setCardNumber(walletRes.data.cardNumber);
+        setCardNumber(user?.nfcUid || 'N/A');
         setLastRechargeDate(walletRes.data.lastRechargeDate);
       }
       
@@ -718,8 +732,8 @@ const DashboardScreen = ({ navigation }) => {
           <Text style={styles.balanceAmount}>NPR {balance.toLocaleString()}</Text>
           <View style={styles.cardFooter}>
             <View>
-              <Text style={styles.cardFooterLabel}>{t('dashboard.card_number')}</Text>
-              <Text style={styles.cardFooterValue}>{cardNumber}</Text>
+              <Text style={styles.cardFooterLabel}>NFC ID</Text>
+              <Text style={styles.cardFooterValue}>{user?.nfcUid || 'N/A'}</Text>
             </View>
             <View>
               <Text style={styles.cardFooterLabel}>{t('dashboard.last_recharge')}</Text>
@@ -1123,14 +1137,13 @@ const ProfileScreen = ({ navigation }) => {
   const { user, logout } = useAuth();
   const { t } = useLanguage();
   const [balance, setBalance] = useState(1250);
-  const [cardNumber, setCardNumber] = useState('**** **** **** 5678');
 
   useEffect(() => { loadWalletData(); }, []);
 
   const loadWalletData = async () => {
     try {
       const response = await api.post('/wallet/balance', {});
-      if (response.success) { setBalance(response.data.balance); setCardNumber(response.data.cardNumber); }
+      if (response.success) { setBalance(response.data.balance); }
     } catch (error) { console.error('Load wallet error:', error); }
   };
 
@@ -1164,6 +1177,17 @@ const ProfileScreen = ({ navigation }) => {
           <Text style={styles.profileName}>{user?.fullName || 'User'}</Text>
           <Text style={styles.profileEmail}>{user?.email || 'user@example.com'}</Text>
           <Text style={styles.profilePhone}>{user?.mobileNumber || '98XXXXXXXX'}</Text>
+
+          <View style={styles.idContainer}>
+            <View style={styles.idBadge}>
+              <Text style={styles.idLabel}>USER ID: </Text>
+              <Text style={styles.idValue}>{user?.userId || 'N/A'}</Text>
+            </View>
+            <View style={styles.idBadge}>
+              <Text style={styles.idLabel}>NFC ID: </Text>
+              <Text style={styles.idValue}>{user?.nfcUid || 'N/A'}</Text>
+            </View>
+          </View>
         </View>
 
         <View style={styles.walletInfoCard}>
@@ -1173,8 +1197,8 @@ const ProfileScreen = ({ navigation }) => {
           </View>
           <View style={styles.walletDivider} />
           <View style={styles.walletInfoItem}>
-            <Icon name="credit-card" size={24} color="#0F4C81" />
-            <View><Text style={styles.walletInfoLabel}>{t('dashboard.card_number')}</Text><Text style={styles.walletInfoValue}>{cardNumber}</Text></View>
+            <Icon name="nfc" size={24} color="#0F4C81" />
+            <View><Text style={styles.walletInfoLabel}>NFC ID</Text><Text style={styles.walletInfoValue}>{user?.nfcUid || 'N/A'}</Text></View>
           </View>
         </View>
 
@@ -1388,6 +1412,10 @@ const styles = StyleSheet.create({
   profileName: { fontSize: 20, fontWeight: 'bold', color: '#1F2937', marginBottom: 4 },
   profileEmail: { fontSize: 14, color: '#6B7280', marginBottom: 2 },
   profilePhone: { fontSize: 14, color: '#6B7280' },
+  idContainer: { flexDirection: 'column', alignItems: 'center', marginTop: 10, gap: 8 },
+  idBadge: { flexDirection: 'row', backgroundColor: '#F0F4F8', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: '#D1D9E6' },
+  idLabel: { fontSize: 11, fontWeight: 'bold', color: '#5C6E82' },
+  idValue: { fontSize: 11, fontWeight: 'bold', color: '#0F4C81' },
   walletInfoCard: { flexDirection: 'row', backgroundColor: '#FFFFFF', margin: 16, padding: 20, borderRadius: 16, justifyContent: 'space-around' },
   walletInfoItem: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   walletDivider: { width: 1, backgroundColor: '#E5E7EB' },

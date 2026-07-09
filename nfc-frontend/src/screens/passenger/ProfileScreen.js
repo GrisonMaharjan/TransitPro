@@ -1,21 +1,38 @@
-// Updated ProfileScreen component - Add this to your App.js
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
+import { useTheme } from '../../context/ThemeContext';
+import api from '../../services/api/apiClient';
+
 const ProfileScreen = ({ navigation }) => {
   const { user, logout } = useAuth();
   const { t } = useLanguage();
   const { theme, isDark, toggleTheme } = useTheme();
   const colors = theme.colors;
   
-  const [balance, setBalance] = useState(1250);
-  const [cardNumber, setCardNumber] = useState('**** **** **** 5678');
+  const [balance, setBalance] = useState(0);
+  const [cardNumber, setCardNumber] = useState('N/A');
 
-  useEffect(() => { loadWalletData(); }, []);
+  useEffect(() => {
+    loadWalletData();
+  }, []);
 
   const loadWalletData = async () => {
     try {
       const response = await api.post('/wallet/balance', {});
-      if (response.success) { 
+      if (response.data.success) {
         setBalance(response.data.balance); 
-        setCardNumber(response.data.cardNumber); 
+        setCardNumber(response.data.cardNumber || 'N/A');
       }
     } catch (error) { 
       console.error('Load wallet error:', error); 
@@ -58,9 +75,9 @@ const ProfileScreen = ({ navigation }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={[styles.profileHeader, { backgroundColor: colors.surface }]}>
           <View style={[styles.profileAvatar, { backgroundColor: colors.primary }]}>
-            <Text style={styles.profileAvatarText}>{user?.fullName?.charAt(0) || user?.name?.charAt(0) || 'U'}</Text>
+            <Text style={styles.profileAvatarText}>{user?.name?.charAt(0) || user?.fullName?.charAt(0) || 'U'}</Text>
           </View>
-          <Text style={[styles.profileName, { color: colors.text }]}>{user?.fullName || user?.name || 'User'}</Text>
+          <Text style={[styles.profileName, { color: colors.text }]}>{user?.name || user?.fullName || 'User'}</Text>
           <Text style={[styles.profileEmail, { color: colors.textSecondary }]}>{user?.email || 'user@example.com'}</Text>
           <Text style={[styles.profilePhone, { color: colors.textSecondary }]}>{user?.mobileNumber || '98XXXXXXXX'}</Text>
 
@@ -86,10 +103,10 @@ const ProfileScreen = ({ navigation }) => {
           </View>
           <View style={[styles.walletDivider, { backgroundColor: colors.divider }]} />
           <View style={styles.walletInfoItem}>
-            <Icon name="credit-card" size={24} color={colors.primary} />
+            <Icon name="nfc" size={24} color={colors.primary} />
             <View>
-              <Text style={[styles.walletInfoLabel, { color: colors.textSecondary }]}>{t('dashboard.card_number')}</Text>
-              <Text style={[styles.walletInfoValue, { color: colors.text }]}>{cardNumber}</Text>
+              <Text style={[styles.walletInfoLabel, { color: colors.textSecondary }]}>NFC ID</Text>
+              <Text style={[styles.walletInfoValue, { color: colors.text }]}>{user?.nfcUid || 'N/A'}</Text>
             </View>
           </View>
         </View>
@@ -128,10 +145,6 @@ const ProfileScreen = ({ navigation }) => {
               {isDark && <Icon name="check-circle" size={18} color="#FFFFFF" style={styles.themeCheck} />}
             </TouchableOpacity>
           </View>
-          
-          <Text style={[styles.themeDescription, { color: colors.textSecondary }]}>
-            {isDark ? 'Dark mode is active. Light on eyes at night.' : 'Light mode is active. Bright and clear.'}
-          </Text>
         </View>
 
         <View style={[styles.menuSection, { backgroundColor: colors.surface, borderColor: colors.border }]}>
@@ -156,3 +169,186 @@ const ProfileScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  headerBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  profileHeader: {
+    alignItems: 'center',
+    paddingVertical: 30,
+    marginBottom: 16,
+  },
+  profileAvatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  profileAvatarText: {
+    color: '#FFFFFF',
+    fontSize: 32,
+    fontWeight: 'bold',
+  },
+  profileName: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  profileEmail: {
+    fontSize: 14,
+    marginBottom: 2,
+  },
+  profilePhone: {
+    fontSize: 14,
+    marginBottom: 16,
+  },
+  idContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: 10,
+    gap: 8,
+  },
+  idBadge: {
+    flexDirection: 'row',
+    backgroundColor: '#F0F4F8',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#D1D9E6',
+  },
+  idLabel: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#5C6E82',
+  },
+  idValue: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#0F4C81',
+  },
+  walletInfoCard: {
+    marginHorizontal: 16,
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    marginBottom: 16,
+  },
+  walletInfoItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  walletInfoLabel: {
+    fontSize: 12,
+  },
+  walletInfoValue: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  walletDivider: {
+    height: 1,
+    marginVertical: 12,
+  },
+  themeSection: {
+    marginHorizontal: 16,
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    marginBottom: 16,
+  },
+  themeHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 16,
+  },
+  themeTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  themeToggleContainer: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  themeOption: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    borderRadius: 12,
+    gap: 8,
+    position: 'relative',
+  },
+  themeOptionText: {
+    fontWeight: 'bold',
+  },
+  themeCheck: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+  },
+  menuSection: {
+    marginHorizontal: 16,
+    borderRadius: 16,
+    borderWidth: 1,
+    marginBottom: 16,
+    overflow: 'hidden',
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+  },
+  menuIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  menuTitle: {
+    flex: 1,
+    fontSize: 16,
+  },
+  logoutButton: {
+    marginHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 16,
+    borderWidth: 1,
+    marginBottom: 24,
+    gap: 8,
+  },
+  logoutText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  versionText: {
+    textAlign: 'center',
+    fontSize: 12,
+    marginBottom: 30,
+  },
+});
+
+export default ProfileScreen;

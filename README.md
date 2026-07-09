@@ -42,6 +42,42 @@ This week, the system underwent significant security and architecture upgrades:
 *   **`nfc-backend/`**: Integrated Node.js backend for all transit logic and passenger management.
 *   **`nfc-frontend/`**: React Native / Expo application for passenger wallet management and registration.
 
+## 📦 Package Manifest (Versions)
+
+### 1. Android App (Bus Side)
+*   **Kotlin**: 2.2.10
+*   **Retrofit**: 2.9.0
+*   **OkHttp (Logging Interceptor)**: 4.12.0
+*   **Google Play Services Location**: 21.3.0
+*   **Material Components**: 1.10.0
+*   **AndroidX Core KTX**: 1.10.1
+*   **AndroidX AppCompat**: 1.6.1
+
+### 2. Backend (nfc-backend)
+*   **Node.js**: 16+
+*   **Express**: 5.2.1
+*   **Mongoose (MongoDB)**: 9.7.3
+*   **JSONWebToken**: 9.0.3
+*   **BcryptJS**: 3.0.3
+*   **SQLite3**: 6.0.1
+*   **Dotenv**: 17.4.2
+*   **Cors**: 2.8.6
+*   **Morgan**: 1.10.1
+
+### 3. Passenger Frontend (nfc-frontend)
+*   **Expo**: ~54.0.0 (SDK 54)
+*   **React**: 19.1.0
+*   **React Native**: 0.81.5
+*   **React Navigation (Native/Stack)**: ^7.0.0
+*   **Redux Toolkit**: ^2.0.0
+*   **React Redux**: ^9.1.0
+*   **React Native Reanimated**: ~4.1.1
+*   **React Native Worklets**: 0.10.2
+*   **React Native NFC Manager**: ^3.14.13
+*   **React Native Paper**: ^5.12.3
+*   **Victory Native (Charts)**: ^36.8.4
+*   **Axios**: ^1.7.2
+
 ## ⚙️ Setup & Configuration
 
 ### 1. Backend (.env)
@@ -58,9 +94,8 @@ private const val BASE_URL = "http://your_server_ip:3000/"
 ```
 
 ## 🛡️ Security Measures
-1.  **Card Encryption**: Plain-text IDs never touch the physical card.
+1.  **Card Encryption**: Plain-text IDs never touch the physical card (AES-256-CBC).
 2.  **Anti-Fraud**: Mathematical Haversine verification prevents manual stop entry errors.
 3.  **Session Kill**: Logging out on the app instantly invalidates the token on the server.
+4.  **Device Locking**: One active session per account at any time.
 
----
-Developed by Grison Maharjan
