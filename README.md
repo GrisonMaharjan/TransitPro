@@ -37,6 +37,11 @@ This week, the system underwent significant security and architecture upgrades:
 *   **Android**: NFC-enabled device running Android 8.0+.
 *   **Server**: Node.js 16+ and access to the `nfc-system` MongoDB cluster.
 
+## 📂 Project Structure
+*   **`app/`**: Android application for bus conductors/drivers (Kotlin).
+*   **`nfc-backend/`**: Integrated Node.js backend for all transit logic and passenger management.
+*   **`nfc-frontend/`**: React Native / Expo application for passenger wallet management and registration.
+
 ## ⚙️ Setup & Configuration
 
 ### 1. Backend (.env)
