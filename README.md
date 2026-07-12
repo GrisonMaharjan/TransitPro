@@ -1,97 +1,71 @@
 # TransitPro: Smart NFC Transit System
 
-TransitPro is a secure, NFC-based public transportation management system. It features an Android application for bus conductors/drivers and a robust Node.js backend (`nfc-backend`) that handles encrypted transaction processing, real-time tracking, and automated fare calculation.
+TransitPro is a secure, NFC-based public transportation management system. It features an Android application for bus conductors/drivers, a React Native passenger app, and a robust Node.js backend (`nfc-backend`) that handles encrypted transaction processing, real-time tracking, and automated fare calculation.
 
-## 🚀 Recent Updates (Weekly Log)
+## 🚀 Recent Updates (Development Log)
 
-This week, the system underwent significant security and architecture upgrades:
+The following major features and architectural improvements have been implemented over the past week:
 
-*   **🛡️ Encrypted NFC Ecosystem**: Implemented **AES-256-CBC** encryption for passenger IDs. Data written to physical cards is now secure and unreadable without backend keys.
-*   **🔌 Backend Integration**: Successfully merged the standalone bus backend into the main `NFC-CAPSTONE` project. All transit logic is now modularized under the `/api/bus` prefix.
-*   **🔒 Strict Session Security**: 
-    *   Implemented a **Block-Strategy** single-device policy (one active login per bus).
-    *   Added a strict **1-hour session expiration** to ensure security during shifts.
-    *   Enabled **Server-Side Revocation**, validating every API request against the database active-session status.
-*   **📍 Dynamic Route Tracking**: 
-    *   Upgraded the Routes UI with dual-state tracking.
-    *   Added a **Nearest Stop** indicator (Orange) and a **Bus at Stop** arrival status (Blue, 50m threshold).
-    *   Optimized GPS polling with the **Haversine Formula** for mathematical precision.
-*   **📝 Passenger ID System**: 
-    *   Automated unique **UserId** and **NFCID** generation during passenger registration.
-    *   Integrated passenger verification into the NFC Writer to prevent configuring cards for non-existent users.
-*   **🏗️ Database Isolation**: Created dedicated MongoDB collections (`bususers`, `bussessions`, `bustaps`, `bustrips`) to ensure total data separation from the main system.
+### 🛡️ Security & Encryption
+*   **Encrypted NFC ID System**: Implemented **AES-256-CBC** encryption for passenger IDs on physical NFC cards. IDs are encrypted via the backend before being written to ensure data on cards is unreadable without the system's secret key.
+*   **Enhanced Authentication**: 
+    *   Implemented a **Block-Strategy** single-device policy: Users can only be active on one device at a time; new logins are blocked if a session is already active.
+    *   Added **Server-Side Session Revocation**: Every API request is now validated against the database to ensure the session is still active and has not been revoked.
+    *   Implemented **1-Hour Session Expiration**: Automatic token expiration with database cleanup to enhance shift security.
+
+### 🔌 Project Integration & Architecture
+*   **Monorepo Restructuring**: Successfully merged the standalone bus conductor backend and passenger frontend into the main project folder.
+*   **Modular Routing**: Isolated bus-specific logic under the `/api/bus` prefix to prevent conflicts with main system passenger features.
+*   **Database Isolation**: Migrated all bus-related data to dedicated MongoDB collections (`bususers`, `bussessions`, `bustaps`, `bustrips`, `fares`).
+
+### 📍 Advanced Geolocation & Tracking
+*   **Haversine Precision**: Integrated the **Haversine Formula** for absolute mathematical precision in detecting the nearest bus stops and calculating trip distances.
+*   **Real-Time Stop Detection**: 
+    *   Added a **50m arrival threshold** with dual-state UI indicators: **Nearest Stop** (Orange) vs. **Bus at Stop** (Blue).
+    *   **GPS Bug Fix**: Resolved an issue where tap-out locations would sometimes mirror tap-in data by forcing a high-accuracy fresh GPS poll at the exact moment of every tap.
+*   **Dynamic Route Refresh**: Added a manual refresh button on the Routes page to allow conductors to force a GPS sync if needed.
+
+### 💳 Transaction & Data Management
+*   **Precise Fare Matrix**: Replaced distance estimates with a dedicated **Fare Matrix** system. Fares are now pulled from a database collection seeded from a real-world Sajha Yatayat price list.
+*   **Automatic Balance Deduction**: The system now verifies passenger balance before Tap-In and automatically deducts the precise stage-based fare upon Tap-Out.
+*   **Automated ID Generation**: Passengers are now automatically assigned unique, non-replicable **UserIds** and **NFCIDs** during registration.
+*   **Writer Verification**: The NFC Writer tool now verifies that a passenger exists in the main database before allowing a conductor to configure a new transit card.
+
+### 📱 User Interface (UX)
+*   **Passenger UI Restoration**: Fully restored the professional high-contrast Dashboard and Profile UI, ensuring all features (Quick Actions, Recent Activity) are functional and synced with live data.
+*   **ID Visibility**: User and NFC IDs are now prominently displayed in the passenger profile and dashboard for easy reference.
+*   **Automated Reset**: The bus conductor app now automatically resets its "Ready to Tap" state after a successful read to minimize processing errors.
 
 ## 📱 Android Features
 *   **Encrypted Tapping**: Securely processes Tap-In/Out events with real-time passenger validation.
-*   **Intelligent UI**: Home screen automatically resets after taps to minimize conductor error.
 *   **NFC Tools**: Includes a secure card writer (with backend encryption) and a diagnostic NFC scanner.
 *   **Reports**: Generates professional PDF trip history reports for administrative auditing.
 
 ## 🛠️ Backend Architecture (nfc-backend)
-*   **Framework**: Express.js with a modular route structure.
-*   **Security**: JWT for stateless authentication + Database-backed session validation.
-*   **Encryption**: Node.js `crypto` module for AES-256 handling.
+*   **Framework**: Express.js with modular route structures.
+*   **Security**: JWT + Database-backed session validation.
+*   **Encryption**: Node.js `crypto` for AES-256 handling.
 *   **Database**: MongoDB Atlas for persistence and SQLite for local caching.
-
-## 📋 System Requirements
-*   **Android**: NFC-enabled device running Android 8.0+.
-*   **Server**: Node.js 16+ and access to the `nfc-system` MongoDB cluster.
-
-## 📂 Project Structure
-*   **`app/`**: Android application for bus conductors/drivers (Kotlin).
-*   **`nfc-backend/`**: Integrated Node.js backend for all transit logic and passenger management.
-*   **`nfc-frontend/`**: React Native / Expo application for passenger wallet management and registration.
 
 ## 📦 Package Manifest (Versions)
 
 ### 1. Android App (Bus Side)
 *   **Kotlin**: 2.2.10
 *   **Retrofit**: 2.9.0
-*   **OkHttp (Logging Interceptor)**: 4.12.0
 *   **Google Play Services Location**: 21.3.0
-*   **Material Components**: 1.10.0
 *   **AndroidX Core KTX**: 1.10.1
-*   **AndroidX AppCompat**: 1.6.1
 
 ### 2. Backend (nfc-backend)
 *   **Node.js**: 16+
 *   **Express**: 5.2.1
 *   **Mongoose (MongoDB)**: 9.7.3
 *   **JSONWebToken**: 9.0.3
-*   **BcryptJS**: 3.0.3
-*   **SQLite3**: 6.0.1
-*   **Dotenv**: 17.4.2
-*   **Cors**: 2.8.6
-*   **Morgan**: 1.10.1
 
 ### 3. Passenger Frontend (nfc-frontend)
 *   **Expo**: ~54.0.0 (SDK 54)
 *   **React**: 19.1.0
 *   **React Native**: 0.81.5
-*   **React Navigation (Native/Stack)**: ^7.0.0
 *   **Redux Toolkit**: ^2.0.0
-*   **React Redux**: ^9.1.0
-*   **React Native Reanimated**: ~4.1.1
-*   **React Native Worklets**: 0.10.2
-*   **React Native NFC Manager**: ^3.14.13
-*   **React Native Paper**: ^5.12.3
-*   **Victory Native (Charts)**: ^36.8.4
-*   **Axios**: ^1.7.2
-
-## ⚙️ Setup & Configuration
-
-### 1. Backend (.env)
-```env
-PORT=3000
-MONGO_URI=mongodb+srv://.../nfc-system
-JWT_SECRET=your_jwt_secret
-NFC_ENCRYPTION_KEY=your_aes_key
-```
-
-### 2. Android App (RetrofitClient.kt)
-```kotlin
-private const val BASE_URL = "http://your_server_ip:3000/"
-```
 
 ## 🛡️ Security Measures
 1.  **Card Encryption**: Plain-text IDs never touch the physical card (AES-256-CBC).
@@ -99,3 +73,5 @@ private const val BASE_URL = "http://your_server_ip:3000/"
 3.  **Session Kill**: Logging out on the app instantly invalidates the token on the server.
 4.  **Device Locking**: One active session per account at any time.
 
+---
+Developed by Grison Maharjan
