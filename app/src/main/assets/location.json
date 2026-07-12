@@ -1,18 +1,19 @@
 {
   "locations": [
-    {"name": "Bungamati", "latitude": 27.628425, "longitude": 85.303461},
-    { "name": "Saibu", "latitude": 27.649678, "longitude": 85.305234 },
-    { "name": "Bhaisipati", "latitude": 27.6521, "longitude": 85.3028 },
+    { "name": "Bungamati", "latitude": 27.628425, "longitude": 85.303461 },
+    { "name": "Chhyasikot", "latitude": 27.639054, "longitude": 85.304021 },
+    { "name": "Sainbu", "latitude": 27.649678, "longitude": 85.305234 },
+    { "name": "Bhaisepati", "latitude": 27.6521, "longitude": 85.3028 },
     { "name": "Nakhu Chowk", "latitude": 27.661438, "longitude": 85.305817 },
     { "name": "Ekantakuna", "latitude": 27.666184, "longitude": 85.309622 },
     { "name": "Mahalaxmisthan Chowk", "latitude": 27.661422, "longitude": 85.318103 },
     { "name": "Lagankhel", "latitude": 27.668434, "longitude": 85.321627 },
     { "name": "Kumaripati", "latitude": 27.671548, "longitude": 85.318496 },
     { "name": "Jawalakhel", "latitude": 27.672854, "longitude": 85.313666 },
-    { "name": "Pulchowk", "latitude": 27.676687, "longitude": 85.316129 },
+    { "name": "Pulchowk Damkal", "latitude": 27.676687, "longitude": 85.316129 },
     { "name": "Krishna Galli", "latitude": 27.680944, "longitude": 85.317584 },
-    { "name": "Kupondol", "latitude": 27.688086, "longitude": 85.316191 },
-    { "name": "N.A.C.", "latitude": 27.701498, "longitude": 85.313547 },
+    { "name": "Kupondole", "latitude": 27.688086, "longitude": 85.316191 },
+    { "name": "N.A.C", "latitude": 27.701498, "longitude": 85.313547 },
     { "name": "Ratnapark", "latitude": 27.708954, "longitude": 85.315735 }
   ]
 }

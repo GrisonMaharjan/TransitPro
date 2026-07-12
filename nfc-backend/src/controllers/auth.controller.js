@@ -12,9 +12,12 @@ exports.register = async (req, res) => {
             password
         } = req.body;
 
+        console.log(`--- Registration Attempt: ${email} ---`);
+
         const userExists = await User.findOne({ email });
 
         if (userExists) {
+            console.log(`❌ Registration Failed: User ${email} already exists.`);
             return res.status(400).json({
                 message: 'User already exists'
             });
@@ -35,6 +38,10 @@ exports.register = async (req, res) => {
             nfcUid
         });
 
+        console.log(`✅ Registration Successful: ${user.name} (${user.email})`);
+        console.log(`Stored in collection: ${User.collection.name}`);
+        console.log(`User IDs: ${user.userId}, ${user.nfcUid}`);
+
         res.json({
             _id: user._id,
             userId: user.userId,
@@ -47,6 +54,7 @@ exports.register = async (req, res) => {
         });
 
     } catch (error) {
+        console.error('❌ Registration Error:', error.message);
         res.status(500).json({
             message: error.message
         });

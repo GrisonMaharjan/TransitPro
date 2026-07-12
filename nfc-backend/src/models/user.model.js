@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 
+/**
+ * Passenger User Model
+ * Stores general transit passengers with their wallet balance and unique IDs.
+ */
 const userSchema = new mongoose.Schema({
     userId: {
         type: String,
@@ -51,6 +55,9 @@ const userSchema = new mongoose.Schema({
         enum: ['admin', 'driver', 'passenger'],
         default: 'passenger'
     }
-}, { timestamps: true });
+}, {
+    timestamps: true,
+    collection: 'users' // Explicitly use 'users' collection
+});
 
 module.exports = mongoose.model('User', userSchema);

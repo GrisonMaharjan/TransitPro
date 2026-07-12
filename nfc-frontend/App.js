@@ -48,7 +48,7 @@ const saveStoredAccounts = (accounts) =>
   AsyncStorage.setItem(STORAGE_KEYS.accounts, JSON.stringify(accounts));
 
 // ============ API CONFIGURATION ============
-const API_BASE_URL = 'http://192.168.1.70:3000/api/v1';
+const API_BASE_URL = 'http://10.200.30.185:3000/api/v1';
 
 // Mock API - Replace with actual API calls
 const api = {

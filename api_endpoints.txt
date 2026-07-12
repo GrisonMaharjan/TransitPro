@@ -1,0 +1,51 @@
+TRANSITPRO COMPREHENSIVE API LIST
+Base URL: http://192.168.1.70:3000
+
+========================================================================
+BUS APP APIS (TRANSITPRO MOBILE)
+========================================================================
+
+1. BUS LOGIN
+Method: POST
+URL: api/bus/login
+Body (JSON):
+{
+    "busNumber": "STRING",
+    "password": "STRING"
+}
+Tests (Postman):
+- Status code 200
+- Save pm.environment.set("bus_token", pm.response.json().token)
+
+2. SEND TAP (Check-in/Check-out)
+Method: POST
+URL: api/bus/tap
+Headers: Authorization: Bearer <BUS_TOKEN>
+Body (JSON):
+{
+    "encryptedPassengerId": "STRING (from NFC)",
+    "stop": "STRING",
+    "timestamp": LONG_TIMESTAMP,
+    "busId": "STRING",
+    "latitude": DOUBLE_OPTIONAL,
+    "longitude": DOUBLE_OPTIONAL
+}
+
+3. GET BUS HISTORY
+Method: GET
+URL: api/bus/history
+Headers: Authorization: Bearer <BUS_TOKEN>
+
+4. ENCRYPT NFC ID (Tool)
+Method: POST
+URL: api/bus/tools/encrypt-nfcid
+Headers: Authorization: Bearer <BUS_TOKEN>
+Body (JSON):
+{
+    "nfcId": "STRING (Passenger ID or NFC UID)"
+}
+
+5. BUS LOGOUT
+Method: POST
+URL: api/bus/logout
+Headers: Authorization: Bearer <BUS_TOKEN>

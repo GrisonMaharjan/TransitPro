@@ -266,9 +266,14 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
+            // Always request fresh location on tap to ensure we have the correct current stop
             getCurrentLocation { location ->
-                val currentStop = if (location != null) findNearestStop(location.latitude, location.longitude) else "Unknown"
-                processTap(encryptedData, currentStop, location?.latitude ?: 0.0, location?.longitude ?: 0.0)
+                if (location != null) {
+                    val currentStop = findNearestStop(location.latitude, location.longitude)
+                    processTap(encryptedData, currentStop, location.latitude, location.longitude)
+                } else {
+                    showToast("Error: Could not acquire GPS location.", false)
+                }
             }
         }
     }
@@ -286,13 +291,29 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) { null } finally { try { ndef.close() } catch (e: Exception) {} }
     }
 
+    /**
+     * Attempts to get a high-accuracy fresh location for the tap.
+     */
+    @SuppressLint("MissingPermission")
     private fun getCurrentLocation(callback: (Location?) -> Unit) {
-        if (lastKnownLocation != null) callback(lastKnownLocation)
-        else {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                fusedLocationClient.lastLocation.addOnSuccessListener { callback(it) }
-            } else callback(null)
-        }
+        // First try to get the current high-accuracy location
+        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    callback(location)
+                } else {
+                    // Fallback to last known location if fresh location fails
+                    fusedLocationClient.lastLocation.addOnSuccessListener { lastLoc ->
+                        callback(lastLoc)
+                    }
+                }
+            }
+            .addOnFailureListener {
+                // If everything fails, try one last time with last known
+                fusedLocationClient.lastLocation.addOnSuccessListener { lastLoc ->
+                    callback(lastLoc)
+                }
+            }
     }
 
     private fun processTap(encryptedId: String, currentStop: String, lat: Double, lon: Double) {
@@ -330,7 +351,7 @@ class MainActivity : AppCompatActivity() {
         val message = when(result.type) {
             "TAP_IN" -> "Welcome aboard!\nStop: $currentStop"
             "CANCELLED" -> "Cancelled within 5 seconds.\nNo fare charged."
-            else -> "Origin: ${result.origin}\nFare: Rs. ${result.fare}"
+            else -> "From: ${result.origin}\nTo: ${result.destination}\nFare: Rs. ${result.fare}"
         }
         AlertDialog.Builder(this).setTitle(title).setMessage(message).setPositiveButton("OK", null).show()
     }
