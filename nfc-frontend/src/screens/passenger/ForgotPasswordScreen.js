@@ -13,8 +13,10 @@ import { useForm, Controller } from 'react-hook-form';
 import { showMessage } from 'react-native-flash-message';
 import InputField from '../../components/forms/InputField';
 import PrimaryButton from '../../components/buttons/PrimaryButton';
-import authService from '../../services/api/authService';
+import authService from '../../services/api/authservice';
 import { colors, typography, spacing } from '../../constants/theme';
+
+const STRONG_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -160,7 +162,10 @@ const ForgotPasswordScreen = ({ navigation }) => {
               name="newPassword"
               rules={{
                 required: 'New password is required',
-                minLength: { value: 6, message: 'Password must be at least 6 characters' },
+                minLength: { value: 8, message: 'Password must be at least 8 characters' },
+                validate: (value) =>
+                  STRONG_PASSWORD_REGEX.test(value) ||
+                  'Password must include uppercase, lowercase, number, and special character',
               }}
               render={({ field: { onChange, value } }) => (
                 <InputField

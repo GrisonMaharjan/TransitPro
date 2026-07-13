@@ -1,61 +1,59 @@
-const express =
-require('express');
+const express = require('express');
 
-const router =
-express.Router();
+const router = express.Router();
 
 const {
-createRoute,
-getRoutes
-}
-=
-require(
-'../controllers/route.controller'
-);
 
-const {
-protect
-}
-=
-require(
-'../middleware/auth.middleware'
-);
+    createRoute,
+    getRoutes,
+    getRouteById,
+    updateRoute,
+    deleteRoute
 
-const {
-authorize
-}
-=
-require(
-'../middleware/role.middleware'
-);
+} = require('../controllers/route.controller');
 
+const { protect } = require('../middleware/auth.middleware');
+const { authorize } = require('../middleware/role.middleware');
 
-// CREATE ROUTE
-router.post(
-'/',
+// ==========================
+// Passenger + Admin
+// ==========================
 
-protect,
-
-authorize(
-'admin'
-),
-
-createRoute
-);
-
-
-// GET ROUTES
 router.get(
-'/',
-
-protect,
-
-authorize(
-'admin'
-),
-
-getRoutes
+    '/',
+    protect,
+    getRoutes
 );
 
-module.exports =
-router;
+router.get(
+    '/:id',
+    protect,
+    getRouteById
+);
+
+// ==========================
+// Admin Only
+// ==========================
+
+router.post(
+    '/',
+    protect,
+    authorize('admin'),
+    createRoute
+);
+
+router.put(
+    '/:id',
+    protect,
+    authorize('admin'),
+    updateRoute
+);
+
+router.delete(
+    '/:id',
+    protect,
+    authorize('admin'),
+    deleteRoute
+);
+
+module.exports = router;

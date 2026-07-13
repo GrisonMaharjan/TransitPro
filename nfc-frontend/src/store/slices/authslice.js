@@ -7,6 +7,7 @@ export const login = createAsyncThunk(
   async ({ email, password }, thunkAPI) => {
     try {
       const data = await authService.login(email, password);
+      const authUser = data.user || data;
 
       await AsyncStorage.setItem(
         'token',
@@ -15,7 +16,7 @@ export const login = createAsyncThunk(
 
       await AsyncStorage.setItem(
         'user',
-        JSON.stringify(data)
+        JSON.stringify(authUser)
       );
 
       return data;
@@ -66,6 +67,10 @@ const authSlice = createSlice({
 
   reducers: {
 
+    setAuthenticated: (state, action) => {
+      state.isAuthenticated = action.payload;
+    },
+
     logout: (state) => {
 
       state.user = null;
@@ -87,7 +92,7 @@ const authSlice = createSlice({
 
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload;
+        state.user = action.payload.user || action.payload;
         state.isAuthenticated = true;
       })
 
@@ -113,6 +118,6 @@ const authSlice = createSlice({
 
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setAuthenticated } = authSlice.actions;
 
 export default authSlice.reducer;

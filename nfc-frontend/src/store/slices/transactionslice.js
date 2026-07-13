@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getTransactionHistory, getRecentTransactions } from '../../services/api/transactionService';
+import { getTransactionHistory, getRecentTransactions } from '../../services/api/transactionservice';
 
 const initialState = {
   transactions: [],
@@ -12,8 +12,7 @@ export const fetchTransactions = createAsyncThunk(
   'transaction/fetchAll',
   async (filters, { rejectWithValue }) => {
     try {
-      const response = await getTransactionHistory(filters);
-      return response.data;
+      return await getTransactionHistory(filters);
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch transactions');
     }
@@ -24,8 +23,7 @@ export const fetchRecentTransactions = createAsyncThunk(
   'transaction/fetchRecent',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await getRecentTransactions(10);
-      return response.data;
+      return await getRecentTransactions(10);
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch recent transactions');
     }

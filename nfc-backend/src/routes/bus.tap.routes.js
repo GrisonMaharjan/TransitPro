@@ -13,31 +13,49 @@ router.use(busAuthMiddleware);
 /**
  * Unified Tap Route
  * Handles Tap-In, Tap-Out, and 5-second Cancellation.
- * Automatically looks up fares from the database and deducts passenger balance.
+ * Implements Reward Points and Credit (Ride Now, Pay Later) features.
  */
 router.post('/tap', async (req, res) => {
     const { encryptedPassengerId, stop, timestamp, busId, latitude, longitude } = req.body;
 
     try {
-        // 1. Decrypt the passenger ID from the card
         const passengerId = decrypt(encryptedPassengerId);
         if (!passengerId) {
             return res.status(400).json({ success: false, message: 'Invalid NFC Card' });
         }
 
-        // 2. Validate Passenger registration and check balance
         const passenger = await User.findOne({ nfcUid: passengerId });
         if (!passenger) {
             return res.status(404).json({ success: false, message: 'Passenger not registered' });
+        }
+
+        if (passenger.isNfcBlocked) {
+            return res.status(403).json({ success: false, message: 'This NFC Card is blocked.' });
         }
 
         let activeTrip = await BusTrip.findOne({ passengerId, isActive: true });
 
         if (!activeTrip) {
             // --- PHASE: TAP IN ---
-            // Minimum balance check (must have at least the minimum fare to start)
-            if (passenger.balance < 18) {
-                return res.status(403).json({ success: false, message: 'Insufficient balance. Please recharge.' });
+
+            // 🛑 BLOCK IF IN DEBT: Must clear negative balance before starting a new trip
+            if (passenger.balance < 0) {
+                return res.status(403).json({
+                    success: false,
+                    message: `Entry Denied. Please clear your previous credit of Rs. ${Math.abs(passenger.balance)}.`
+                });
+            }
+
+            // 💳 CREDIT ELIGIBILITY CHECK:
+            // Standard entry requires Rs. 18.
+            // If balance is between 0 and 17, they can only enter if they have 5+ Reward Points.
+            const isEligibleForEmergencyCredit = passenger.rewardPoints >= 5;
+
+            if (passenger.balance < 18 && !isEligibleForEmergencyCredit) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Insufficient balance (Min Rs. 18). Need 5+ Reward Points to use emergency credit.'
+                });
             }
 
             const newTrip = new BusTrip({
@@ -61,11 +79,9 @@ router.post('/tap', async (req, res) => {
             });
             await tapLog.save();
 
-            // Update user status
             passenger.isTappedIn = true;
             await passenger.save();
 
-            console.log(`Tap In: ${passenger.name} at ${stop}`);
             return res.status(200).json({
                 success: true,
                 type: 'TAP_IN',
@@ -85,7 +101,6 @@ router.post('/tap', async (req, res) => {
                 passenger.isTappedIn = false;
                 await passenger.save();
 
-                console.log(`Tap Cancelled: ${passenger.name}`);
                 return res.status(200).json({
                     success: true,
                     type: 'CANCELLED',
@@ -95,24 +110,40 @@ router.post('/tap', async (req, res) => {
             }
 
             // --- PHASE: TAP OUT ---
-            // 3. Lookup precise fare from the database Fare Matrix
             const fareRecord = await Fare.findOne({
                 sourceStop: activeTrip.tapInStop,
                 destinationStop: stop
             });
 
-            // Fallback to minimum fare if specific record not found
             const calculatedFare = fareRecord ? fareRecord.fare : 18;
 
-            if (passenger.balance < calculatedFare) {
-                // In a real system, you might allow a single negative balance trip,
-                // but here we enforce strict payment.
-                return res.status(403).json({ success: false, message: 'Insufficient balance to complete trip.' });
+            // 🛑 CREDIT LIMIT CHECK: Max debt allowed is 100
+            const potentialBalance = passenger.balance - calculatedFare;
+            if (potentialBalance < -100) {
+                return res.status(403).json({
+                    success: false,
+                    message: `Trip exceeds credit limit of Rs. 100. Current Balance: Rs. ${passenger.balance}`
+                });
             }
 
-            // 4. Deduct Balance and finalize trip
+            // 💰 REWARD POINTS LOGIC:
+            // fare > 30 : 2 points
+            // fare > 20 : 1 point
+            // fare < 20 : 0 points
+            let pointsEarned = 0;
+            if (calculatedFare > 30) pointsEarned = 2;
+            else if (calculatedFare > 20) pointsEarned = 1;
+
+            // Update user status and deduct balance
             passenger.balance -= calculatedFare;
+            passenger.rewardPoints += pointsEarned;
             passenger.isTappedIn = false;
+
+            // Mark as having unpaid credit if balance goes negative
+            if (passenger.balance < 0) {
+                passenger.hasUnpaidCredit = true;
+            }
+
             await passenger.save();
 
             activeTrip.isActive = false;
@@ -134,7 +165,6 @@ router.post('/tap', async (req, res) => {
             });
             await tapLog.save();
 
-            console.log(`Tap Out: ${passenger.name}. Fare: Rs. ${calculatedFare}`);
             return res.status(200).json({
                 success: true,
                 type: 'TAP_OUT',
@@ -143,12 +173,14 @@ router.post('/tap', async (req, res) => {
                 destination: stop,
                 fare: calculatedFare,
                 remainingBalance: passenger.balance,
-                duration: Math.round((tapOutTime - activeTrip.tapInTime) / 60000)
+                rewardPoints: passenger.rewardPoints,
+                pointsEarned,
+                isCreditTrip: passenger.balance < 0
             });
         }
     } catch (error) {
-        console.error('❌ Tap Processing Error:', error.message);
-        res.status(500).json({ success: false, error: 'Internal server error during tap processing' });
+        console.error('❌ Tap Error:', error.message);
+        res.status(500).json({ success: false, error: 'Server error during tap' });
     }
 });
 

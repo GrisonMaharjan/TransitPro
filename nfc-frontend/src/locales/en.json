@@ -121,8 +121,10 @@
   "errors": {
     "fill_all_fields": "Please fill all fields",
     "invalid_mobile": "Please enter valid 10-digit mobile number",
-    "password_min_length": "Password must be at least 6 characters",
+    "password_min_length": "Password must be at least 8 characters and include uppercase, lowercase, number, and special character",
+    "password_strength": "Password must be at least 8 characters and include uppercase, lowercase, number, and special character",
     "password_mismatch": "Passwords do not match. Please try again.",
+    "invalid_email": "Please enter a valid email address",
     "invalid_credentials": "Invalid credentials. Please check your email/mobile number and password.",
     "recharge_failed": "Recharge failed. Please try again.",
     "select_amount": "Please select or enter a recharge amount",

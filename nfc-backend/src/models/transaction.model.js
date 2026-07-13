@@ -10,7 +10,7 @@ const transactionSchema = new mongoose.Schema({
 
     type: {
         type: String,
-        enum: ['tap-in', 'tap-out'],
+        enum: ['tap-in', 'tap-out', 'credit'],
         required: true
     },
 

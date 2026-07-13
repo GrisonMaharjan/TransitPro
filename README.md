@@ -28,11 +28,15 @@ The following major features and architectural improvements have been implemente
 ### 💳 Transaction & Data Management
 *   **Precise Fare Matrix**: Replaced distance estimates with a dedicated **Fare Matrix** system. Fares are now pulled from a database collection seeded from a real-world Sajha Yatayat price list.
 *   **Automatic Balance Deduction**: The system now verifies passenger balance before Tap-In and automatically deducts the precise stage-based fare upon Tap-Out.
+*   **Reward Points System**: Passengers now earn reward points based on trip fares (e.g., 2 points for fares > Rs. 30). These points build user "trust" within the system.
+*   **Refined Emergency Credit**: Passengers with insufficient balance (below Rs. 18) can take a one-time "Rescue Ride" if they have 5+ reward points. The system allows a debt of up to Rs. 100, which must be cleared before the next trip.
 *   **Automated ID Generation**: Passengers are now automatically assigned unique, non-replicable **UserIds** and **NFCIDs** during registration.
+*   **NFC Card Blocking**: Added a remote kill-switch for lost cards. Passengers can now block their NFC card from the app (requires password verification) to prevent unauthorized use.
 *   **Writer Verification**: The NFC Writer tool now verifies that a passenger exists in the main database before allowing a conductor to configure a new transit card.
 
 ### 📱 User Interface (UX)
 *   **Passenger UI Restoration**: Fully restored the professional high-contrast Dashboard and Profile UI, ensuring all features (Quick Actions, Recent Activity) are functional and synced with live data.
+*   **Card Management (Block NFC)**: Added a dedicated screen for managing NFC status, displaying weekly tap statistics, and allowing secure blocking/unblocking of lost cards.
 *   **ID Visibility**: User and NFC IDs are now prominently displayed in the passenger profile and dashboard for easy reference.
 *   **Automated Reset**: The bus conductor app now automatically resets its "Ready to Tap" state after a successful read to minimize processing errors.
 
@@ -66,6 +70,26 @@ The following major features and architectural improvements have been implemente
 *   **React**: 19.1.0
 *   **React Native**: 0.81.5
 *   **Redux Toolkit**: ^2.0.0
+
+## ⚙️ Setup & Configuration
+
+### 🌐 Network Configuration (IP Address)
+If you move between different networks (e.g., Home vs. Office), you must update the backend IP address in the following **two files** to ensure the apps can communicate with the server:
+
+1.  **Android Bus App**:  
+    `app/src/main/java/com/transitpro/nfcreader/api/RetrofitClient.kt`  
+    *Update the `BASE_URL` constant.*
+
+2.  **Passenger App (Frontend)**:  
+    `nfc-frontend/src/constants/config.js`  
+    *Update the IP address in the `resolveBaseUrl` function.*
+
+### 1. Backend (.env)
+```env
+PORT=3000
+MONGO_URI=mongodb+srv://.../nfc-system
+JWT_SECRET=your_jwt_secret
+```
 
 ## 🛡️ Security Measures
 1.  **Card Encryption**: Plain-text IDs never touch the physical card (AES-256-CBC).

@@ -2,12 +2,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import authReducer from './slices/authSlice';
-import userReducer from './slices/userSlice';
-import cardReducer from './slices/cardSlice';
-import transactionReducer from './slices/transactionSlice';
-import routeReducer from './slices/routeSlice';
-import notificationReducer from './slices/notificationSlice';
+import authReducer from './slices/authslice';
+import userReducer from './slices/userslice';
+import cardReducer from './slices/cardslice';
+import transactionReducer from './slices/transactionslice';
+import routeReducer from './slices/routeslice';
+import notificationReducer from './slices/notificationslice';
 
 const persistConfig = {
   key: 'root',

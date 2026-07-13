@@ -19,6 +19,12 @@ const syncRoutes = require('./routes/sync.routes');
 const adminRoutes = require('./routes/admin.routes');
 const routeRoutes = require('./routes/route.routes');
 const userRoutes = require('./routes/user.routes');
+const transactionRoutes = require('./routes/transaction.routes');
+const stopRoutes = require('./routes/stop.routes');
+const busRoutes = require('./routes/bus.routes');
+const driverRoutes = require('./routes/driver.routes');
+
+// Bus App Specific Routes
 const busAuthRoutes = require('./routes/bus.auth.routes');
 const busTapRoutes = require('./routes/bus.tap.routes');
 const busToolsRoutes = require('./routes/bus.tools.routes');
@@ -31,9 +37,6 @@ app.use(morgan('dev'));
 
 // --- ADMINISTRATIVE SEEDING ROUTES ---
 
-/**
- * Seeds the basic stop information into the 'stops' collection.
- */
 app.get('/api/seed-stops', async (req, res) => {
     try {
         await Stop.deleteMany();
@@ -60,13 +63,8 @@ app.get('/api/seed-stops', async (req, res) => {
     }
 });
 
-/**
- * Reads 'fares_seed.json' and populates the 'fares' collection with individual document entries.
- * This is used for precise stage-based fare lookup during Tap-Out.
- */
 app.get('/api/seed-fares', async (req, res) => {
     try {
-        // 1. Load data from file
         const filePath = path.join(__dirname, '../fares_seed.json');
         if (!fs.existsSync(filePath)) {
             return res.status(404).json({ success: false, message: 'fares_seed.json not found' });
@@ -75,7 +73,6 @@ app.get('/api/seed-fares', async (req, res) => {
         const faresData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
         const routeName = faresData[0].routeName;
 
-        // 2. Prepare/Refresh Route
         await Route.deleteMany({ name: routeName });
         const stops = await Stop.find().sort({ order: 1 });
         const route = await Route.create({
@@ -83,7 +80,6 @@ app.get('/api/seed-fares', async (req, res) => {
             stops: stops.map(s => s._id)
         });
 
-        // 3. Clear existing fares for this route and insert new ones
         await Fare.deleteMany({ routeId: route._id });
 
         const faresToInsert = faresData[0].fares.map(f => ({
@@ -101,7 +97,6 @@ app.get('/api/seed-fares', async (req, res) => {
             routeId: route._id
         });
     } catch (err) {
-        console.error('Seeding Error:', err);
         res.status(500).json({ success: false, error: err.message });
     }
 });
@@ -113,12 +108,28 @@ app.use('/api/wallet', walletRoutes);
 app.use('/api/nfc', nfcRoutes);
 app.use('/api/sync', syncRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/route', routeRoutes);
-app.use('/api/user', userRoutes);
+app.use('/api/routes', routeRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/user', userRoutes); // Alias for frontend compatibility
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/stops', stopRoutes);
+app.use('/api/buses', busRoutes);
+app.use('/api/drivers', driverRoutes);
+
+// Bus App (Android) Routes
 app.use('/api/bus', busAuthRoutes);
 app.use('/api/bus', busTapRoutes);
 app.use('/api/bus/tools', busToolsRoutes);
 
+// Protected test route
+app.get('/protected', protect, (req, res) => {
+    res.json({
+        message: 'Access granted',
+        user: req.user
+    });
+});
+
+// Root route
 app.get('/', (req, res) => {
     res.send('NFC Backend Running 🚀');
 });

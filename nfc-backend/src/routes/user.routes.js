@@ -7,7 +7,11 @@ require('../middleware/auth.middleware');
 
 const {
     getProfile,
-    getMyTransactions
+    getMyTransactions,
+    updateProfile,
+    changePassword,
+    toggleNfcBlock,
+    getNfcStats
 } =
 require('../controllers/user.controller');
 
@@ -18,9 +22,33 @@ router.get(
 );
 
 router.get(
+    '/nfc-stats',
+    protect,
+    getNfcStats
+);
+
+router.post(
+    '/toggle-nfc-block',
+    protect,
+    toggleNfcBlock
+);
+
+router.get(
     '/transactions',
     protect,
     getMyTransactions
+);
+
+router.put(
+    '/profile',
+    protect,
+    updateProfile
+);
+
+router.put(
+    '/change-password',
+    protect,
+    changePassword
 );
 
 module.exports = router;

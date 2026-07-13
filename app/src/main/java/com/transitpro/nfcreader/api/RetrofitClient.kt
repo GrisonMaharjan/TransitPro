@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
  * Retrofit client provider for handling API communication.
  */
 object RetrofitClient {
-    private const val BASE_URL = "http://10.200.30.185:3000/"
+    private const val BASE_URL = "http://192.168.1.70:3000/"
     private var apiService: ApiService? = null
 
     /**

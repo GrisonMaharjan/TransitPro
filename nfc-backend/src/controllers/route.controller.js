@@ -1,74 +1,162 @@
-const Route =
-require('../models/route.model');
+const Route = require('../models/route.model');
 
-
+// ==========================
 // CREATE ROUTE
-exports.createRoute =
-async (req, res) => {
+// ==========================
+exports.createRoute = async (req, res) => {
 
-try {
+    try {
 
-const {
-name,
-stops
-}
-=
-req.body;
+        const { name, stops } = req.body;
 
-const route =
-await Route.create({
+        const exists = await Route.findOne({ name });
 
-name,
+        if (exists) {
 
-stops
+            return res.status(400).json({
+                message: 'Route already exists'
+            });
 
-});
+        }
 
-res
-.status(201)
-.json(route);
+        const route = await Route.create({
+            name,
+            stops
+        });
 
-}
+        res.status(201).json(route);
 
-catch(error){
+    } catch (error) {
 
-res
-.status(500)
-.json({
-message:
-error.message
-});
+        res.status(500).json({
+            message: error.message
+        });
 
-}
+    }
 
 };
 
+// ==========================
+// GET ALL ROUTES
+// ==========================
+exports.getRoutes = async (req, res) => {
 
-// GET ROUTES
-exports.getRoutes =
-async (req, res) => {
+    try {
 
-try {
+        const routes = await Route
+            .find()
+            .populate('stops')
+            .sort({ createdAt: -1 });
 
-const routes =
-await Route
-.find()
-.populate('stops');
+        res.json(routes);
 
-res
-.json(routes);
+    } catch (error) {
 
-}
+        res.status(500).json({
+            message: error.message
+        });
 
-catch(error){
+    }
 
-res
-.status(500)
-.json({
-message:
-error.message
-});
+};
 
-}
+// ==========================
+// GET ROUTE BY ID
+// ==========================
+exports.getRouteById = async (req, res) => {
+
+    try {
+
+        const route = await Route
+            .findById(req.params.id)
+            .populate('stops');
+
+        if (!route) {
+
+            return res.status(404).json({
+                message: 'Route not found'
+            });
+
+        }
+
+        res.json(route);
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+};
+
+// ==========================
+// UPDATE ROUTE
+// ==========================
+exports.updateRoute = async (req, res) => {
+
+    try {
+
+        const route = await Route.findById(req.params.id);
+
+        if (!route) {
+
+            return res.status(404).json({
+                message: 'Route not found'
+            });
+
+        }
+
+        route.name = req.body.name || route.name;
+
+        if (req.body.stops) {
+            route.stops = req.body.stops;
+        }
+
+        await route.save();
+
+        res.json(route);
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+};
+
+// ==========================
+// DELETE ROUTE
+// ==========================
+exports.deleteRoute = async (req, res) => {
+
+    try {
+
+        const route = await Route.findById(req.params.id);
+
+        if (!route) {
+
+            return res.status(404).json({
+                message: 'Route not found'
+            });
+
+        }
+
+        await route.deleteOne();
+
+        res.json({
+            message: 'Route deleted successfully'
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
 
 };

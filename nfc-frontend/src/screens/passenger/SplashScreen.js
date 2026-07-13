@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { setAuthenticated } from '../../store/slices/authSlice';
+import { setAuthenticated } from '../../store/slices/authslice';
 import storageService from '../../services/storage/storageService';
 import { colors, typography, spacing } from '../../constants/theme';
 

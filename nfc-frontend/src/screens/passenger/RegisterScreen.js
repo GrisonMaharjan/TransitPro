@@ -1,15 +1,25 @@
 
 import React from 'react';
-import { Alert, View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { showMessage } from 'react-native-flash-message';
-import { register } from '../../store/slices/authSlice';
+import { register } from '../../store/slices/authslice';
 import InputField from '../../components/forms/InputField';
 import PasswordInput from '../../components/forms/PasswordInput';
 import PhoneInput from '../../components/forms/PhoneInput';
 import PrimaryButton from '../../components/buttons/PrimaryButton';
 import { colors, typography, spacing } from '../../constants/theme';
+
+const STRONG_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
 const RegisterScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -35,17 +45,12 @@ const RegisterScreen = ({ navigation }) => {
   const onSubmit = async (data) => {
     const result = await dispatch(register(data));
     if (register.fulfilled.match(result)) {
-      const newUser = result.payload;
-      Alert.alert(
-        'Registration Successful',
-        `Welcome to TransitPro!\n\nYour Unique IDs:\nUserId: ${newUser.userId}\nNFCID: ${newUser.nfcUid}\n\nPlease keep these safe.`,
-        [
-          {
-            text: 'Login Now',
-            onPress: () => navigation.navigate('Login')
-          }
-        ]
-      );
+      showMessage({
+        message: 'Registration Successful',
+        description: 'Please login to continue',
+        type: 'success',
+      });
+      navigation.navigate('Login');
     } else if (register.rejected.match(result)) {
       showMessage({
         message: 'Registration Failed',
@@ -138,9 +143,12 @@ const RegisterScreen = ({ navigation }) => {
             rules={{
               required: 'Password is required',
               minLength: {
-                value: 6,
-                message: 'Password must be at least 6 characters',
+                value: 8,
+                message: 'Password must be at least 8 characters',
               },
+              validate: (value) =>
+                STRONG_PASSWORD_REGEX.test(value) ||
+                'Password must include uppercase, lowercase, number, and special character',
             }}
             render={({ field: { onChange, value } }) => (
               <PasswordInput
