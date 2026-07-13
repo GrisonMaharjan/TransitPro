@@ -184,10 +184,29 @@ router.post('/tap', async (req, res) => {
     }
 });
 
-// Fetch History Logs
+/**
+ * Fetch History Logs
+ * Filtered by the logged-in Bus Number and only for TODAY.
+ */
 router.get('/history', async (req, res) => {
     try {
-        const taps = await BusTap.find().sort({ timestamp: -1 }).limit(50);
+        const busNumber = req.user.busNumber;
+
+        // Set date range for TODAY
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+
+        const endOfToday = new Date();
+        endOfToday.setHours(23, 59, 59, 999);
+
+        const taps = await BusTap.find({
+            busId: busNumber,
+            timestamp: {
+                $gte: startOfToday,
+                $lte: endOfToday
+            }
+        }).sort({ timestamp: -1 });
+
         res.status(200).json(taps);
     } catch (error) {
         res.status(500).json({ error: error.message });

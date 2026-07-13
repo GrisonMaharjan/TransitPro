@@ -18,7 +18,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.transitpro.nfcreader.api.RetrofitClient
+import com.transitpro.nfcreader.model.RouteInfo
 import com.transitpro.nfcreader.model.TapLog
 import retrofit2.Call
 import retrofit2.Callback
@@ -133,6 +135,20 @@ class HistoryActivity : AppCompatActivity() {
     private fun updateDailyHeader() {
         val sdf = SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.getDefault())
         findViewById<TextView>(R.id.shiftLogsTitle).text = "Shift Logs - ${sdf.format(Date())}"
+
+        val prefs = getSharedPreferences("TransitProSession", MODE_PRIVATE)
+        val busNumber = prefs.getString("bus_number", "0000")
+        val routeJson = prefs.getString("assigned_route_json", "")
+        
+        var routeName = "Standard Route"
+        if (!routeJson.isNullOrEmpty()) {
+            try {
+                val routeInfo = Gson().fromJson(routeJson, RouteInfo::class.java)
+                routeName = routeInfo.name
+            } catch (e: Exception) {}
+        }
+
+        findViewById<TextView>(R.id.shiftLogsSubtitle).text = "Bus $busNumber • $routeName"
     }
 
     private fun startPdfCreation() {

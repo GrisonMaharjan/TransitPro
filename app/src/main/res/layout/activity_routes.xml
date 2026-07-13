@@ -25,11 +25,12 @@
         app:layout_constraintTop_toBottomOf="@id/topBar">
 
         <TextView
+            android:id="@+id/tvRouteName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Route 42"
+            android:text="Bus Route"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold" />
 
         <LinearLayout

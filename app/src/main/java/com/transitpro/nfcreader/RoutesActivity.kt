@@ -20,6 +20,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.*
+import com.google.gson.Gson
+import com.transitpro.nfcreader.model.RouteInfo
 import org.json.JSONObject
 import java.io.IOException
 import java.util.Locale
@@ -49,14 +51,32 @@ class RoutesActivity : AppCompatActivity() {
 
         setupHeader()
         setupFooter()
+        displayRouteName()
         
-        stopsList.addAll(loadStopsFromJson())
+        loadStops()
         setupRecyclerView()
         
         initLocation()
 
         findViewById<View>(R.id.fabRefresh).setOnClickListener {
             refreshLocation()
+        }
+    }
+
+    private fun displayRouteName() {
+        val tvRouteName = findViewById<TextView>(R.id.tvRouteName)
+        val prefs = getSharedPreferences("TransitProSession", MODE_PRIVATE)
+        val routeJson = prefs.getString("assigned_route_json", "")
+
+        if (!routeJson.isNullOrEmpty()) {
+            try {
+                val routeInfo = Gson().fromJson(routeJson, RouteInfo::class.java)
+                tvRouteName.text = routeInfo.name
+            } catch (e: Exception) {
+                tvRouteName.text = "Active Route"
+            }
+        } else {
+            tvRouteName.text = "Standard Route"
         }
     }
 
@@ -78,7 +98,7 @@ class RoutesActivity : AppCompatActivity() {
 
     private fun setupHeader() {
         val header = findViewById<View>(R.id.topBar)
-        header.findViewById<TextView>(R.id.headerSubText2).text = "ROUTES"
+        header.findViewById<TextView>(R.id.headerSubText2).text = "ACTIVE ROUTE"
         header.findViewById<ImageButton>(R.id.headerMenuButton).setOnClickListener { view ->
             showTopMenu(view)
         }
@@ -134,7 +154,38 @@ class RoutesActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
     }
 
-    private fun loadStopsFromJson(): List<RouteStop> {
+    private fun loadStops() {
+        val prefs = getSharedPreferences("TransitProSession", MODE_PRIVATE)
+        val routeJson = prefs.getString("assigned_route_json", "")
+
+        if (!routeJson.isNullOrEmpty()) {
+            try {
+                val routeInfo = Gson().fromJson(routeJson, RouteInfo::class.java)
+                val stops = routeInfo.stops.map { detail ->
+                    RouteStop(
+                        name = detail.name,
+                        status = "WAITING FOR GPS...",
+                        address = "${detail.name} Station Area",
+                        isReached = false,
+                        isNearest = false,
+                        latitude = detail.latitude,
+                        longitude = detail.longitude
+                    )
+                }
+                stopsList.clear()
+                stopsList.addAll(stops)
+                return
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        
+        // Fallback to local JSON if no route assigned or error
+        stopsList.clear()
+        stopsList.addAll(loadStopsFromAssets())
+    }
+
+    private fun loadStopsFromAssets(): List<RouteStop> {
         val stops = mutableListOf<RouteStop>()
         try {
             val jsonString = assets.open("location.json").bufferedReader().use { it.readText() }

@@ -7,9 +7,9 @@ const {
     createRoute,
     getRoutes,
     getRouteById,
+    getRouteFare,
     updateRoute,
     deleteRoute
-
 } = require('../controllers/route.controller');
 
 const { protect } = require('../middleware/auth.middleware');
@@ -29,6 +29,12 @@ router.get(
     '/:id',
     protect,
     getRouteById
+);
+
+router.get(
+    '/:id/fare',
+    protect,
+    getRouteFare
 );
 
 // ==========================

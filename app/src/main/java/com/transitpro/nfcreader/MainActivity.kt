@@ -31,7 +31,9 @@ import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
+import com.google.gson.Gson
 import com.transitpro.nfcreader.api.RetrofitClient
+import com.transitpro.nfcreader.model.RouteInfo
 import com.transitpro.nfcreader.model.TapResponse
 import org.json.JSONObject
 import retrofit2.Call
@@ -154,6 +156,9 @@ class MainActivity : AppCompatActivity() {
         busIdText = findViewById(R.id.busIdText)
         toastMessage = findViewById(R.id.toastMessage)
         btnCancelTap = findViewById(R.id.btnCancelTap)
+
+        val prefs = getSharedPreferences("TransitProSession", MODE_PRIVATE)
+        busIdText.text = prefs.getString("bus_number", "0000")
 
         nfcCard.setOnClickListener {
             isReadyToReceiveTap = true
@@ -357,6 +362,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadBusStops() {
+        val prefs = getSharedPreferences("TransitProSession", MODE_PRIVATE)
+        val routeJson = prefs.getString("assigned_route_json", "")
+
+        if (!routeJson.isNullOrEmpty()) {
+            try {
+                val routeInfo = Gson().fromJson(routeJson, RouteInfo::class.java)
+                val stops = routeInfo.stops.map { detail ->
+                    StopInfo(detail.name, detail.latitude, detail.longitude)
+                }
+                busStops.clear()
+                busStops.addAll(stops)
+                return
+            } catch (e: Exception) {}
+        }
+
+        // Fallback
         try {
             val json = assets.open("location.json").bufferedReader().use { it.readText() }
             val array = JSONObject(json).getJSONArray("locations")

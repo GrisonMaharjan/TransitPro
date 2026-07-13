@@ -4,9 +4,20 @@ TransitPro is a secure, NFC-based public transportation management system. It fe
 
 ## 🚀 Recent Updates (Development Log)
 
-The following major features and architectural improvements have been implemented over the past week:
+### 🆕 July 13, 2026: Multi-Route Expansion & Rebranding
+*   **TransitPro Rebranding**: Successfully transitioned the entire system from "Transit Command" to **TransitPro**. Updated headers across all Android Activities and Passenger screens.
+*   **Dynamic Route Allocation**: 
+    *   Conductors are now assigned specific routes via the database (e.g., **0427** on Route 1, **0000** on Route 2).
+    *   Android app automatically deep-populates route stops and coordinates upon login, eliminating manual selection.
+*   **Enhanced Passenger Experience**:
+    *   **Live Fare Calculator**: Passengers can now select pickup/drop stops on any route to see real-time estimated fares fetched from the backend.
+    *   **Route Stop Timeline**: Added a vertical visualization of all stops on a selected route with color-coded start/end indicators.
+*   **Data Integrity & Privacy**:
+    *   **History Isolation**: Conductor shift logs are now strictly filtered by **Bus ID**.
+    *   **Today's Logs Only**: Optimized the shift log view to only display taps from the current calendar day for better shift management.
+    *   **Unified Seeding**: Implemented `/api/seed-all` to perfectly synchronize stops, routes, and fares in a single transaction.
 
-### 🛡️ Security & Encryption
+### 🛡️ Security & Encryption (Previous Week)
 *   **Encrypted NFC ID System**: Implemented **AES-256-CBC** encryption for passenger IDs on physical NFC cards. IDs are encrypted via the backend before being written to ensure data on cards is unreadable without the system's secret key.
 *   **Enhanced Authentication**: 
     *   Implemented a **Block-Strategy** single-device policy: Users can only be active on one device at a time; new logins are blocked if a session is already active.
@@ -95,7 +106,7 @@ JWT_SECRET=your_jwt_secret
 1.  **Card Encryption**: Plain-text IDs never touch the physical card (AES-256-CBC).
 2.  **Anti-Fraud**: Mathematical Haversine verification prevents manual stop entry errors.
 3.  **Session Kill**: Logging out on the app instantly invalidates the token on the server.
-4.  **Device Locking**: One active session per account at any time.
+4.  **Device Locking**: One active session per account at any time for bus user.
 
 ---
 Developed by Grison Maharjan

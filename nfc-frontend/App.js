@@ -21,9 +21,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { LanguageProvider, useLanguage } from './src/hooks/useLanguage';
+import { ThemeProvider as GlobalThemeProvider } from './src/hooks/useTheme';
 import LanguageSelector from './src/components/LanguageSelector';
 import { API_CONFIG } from './src/constants/config';
 import BlockNFCScreen from './src/screens/passenger/BlockNFCScreen';
+import RouteDetailScreen from './src/screens/passenger/RouteDetailScreen';
 
 const Stack = createStackNavigator();
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -1192,20 +1194,30 @@ const RoutesScreen = ({ navigation }) => {
   const { colors } = useTheme();
   const [routes, setRoutes] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedRoute, setSelectedRoute] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/routes', token)
-      .then((data) => setRoutes(data.routes || []))
-      .catch((error) => Alert.alert(t('common.error'), error.message))
-      .finally(() => setIsLoading(false));
+    fetchRoutes();
   }, []);
+
+  const fetchRoutes = async () => {
+    setIsLoading(true);
+    try {
+      // Fetching real routes from backend
+      const data = await api.get('/routes', token);
+      // Backend returns array of routes
+      setRoutes(Array.isArray(data) ? data : (data.routes || []));
+    } catch (error) {
+      console.error('Fetch routes error:', error);
+      Alert.alert(t('common.error'), 'Unable to fetch routes from server.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const filteredRoutes = routes.filter(
     (route) =>
-      route.routeName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      route.routeNumber?.includes(searchQuery)
+      route.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (isLoading) return <LoadingSpinner />;
@@ -1231,47 +1243,36 @@ const RoutesScreen = ({ navigation }) => {
         />
       </View>
 
-      <ScrollView>
-        {filteredRoutes.map((route) => (
-          <TouchableOpacity
-            key={route.id}
-            style={[styles.routeCard, { backgroundColor: colors.routeCard }]}
-            onPress={() => setSelectedRoute(selectedRoute === route.id ? null : route.id)}
-          >
-            <View style={styles.routeHeader}>
-              <View style={styles.routeBadge}><Text style={styles.routeNumber}>{route.routeNumber}</Text></View>
-              <Text style={styles.routeFare}>NPR {route.fare}</Text>
-            </View>
-            <Text style={[styles.routeName, { color: colors.text }]}>{route.routeName}</Text>
-            <View style={styles.routeStops}>
-              <Icon name="bus-stop" size={16} color="#2A9D8F" />
-              <Text style={[styles.routeStopText, { color: colors.subtext }]}>{route.fromStop}</Text>
-              <Icon name="arrow-right" size={16} color="#9CA3AF" />
-              <Icon name="flag-checkered" size={16} color="#E63946" />
-              <Text style={[styles.routeStopText, { color: colors.subtext }]}>{route.toStop}</Text>
-            </View>
-            <View style={styles.routeFooter}>
-              <Icon name="map-marker-distance" size={14} color="#9CA3AF" />
-              <Text style={[styles.routeDistance, { color: colors.subtext }]}>{route.distance} {t('routes.km')}</Text>
-            </View>
-            {selectedRoute === route.id && (
-              <View style={[styles.routeDetails, { borderTopColor: colors.border }]}>
-                <View style={styles.detailRow}>
-                  <Text style={[styles.detailLabel, { color: colors.subtext }]}>{t('routes.base_fare')}:</Text>
-                  <Text style={[styles.detailValue, { color: colors.text }]}>NPR 15</Text>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
+        {filteredRoutes.length === 0 ? (
+           <View style={styles.emptyState}>
+             <Icon name="map-marker-path" size={64} color="#D1D5DB" />
+             <Text style={[styles.emptyStateTitle, { color: colors.subtext }]}>No Routes Found</Text>
+           </View>
+        ) : (
+          filteredRoutes.map((route) => (
+            <TouchableOpacity
+              key={route._id}
+              style={[styles.routeCard, { backgroundColor: colors.routeCard }]}
+              onPress={() => navigation.navigate('RouteDetail', { routeId: route._id, routeName: route.name })}
+            >
+              <View style={styles.routeHeader}>
+                <View style={styles.routeBadge}>
+                   <Icon name="bus-side" size={14} color="#0F4C81" />
                 </View>
-                <View style={styles.detailRow}>
-                  <Text style={[styles.detailLabel, { color: colors.subtext }]}>{t('routes.distance_charge')}:</Text>
-                  <Text style={[styles.detailValue, { color: colors.text }]}>NPR {route.fare - 15}</Text>
-                </View>
-                <View style={styles.detailRow}>
-                  <Text style={[styles.detailLabel, { color: colors.subtext }]}>{t('routes.estimated_time')}:</Text>
-                  <Text style={[styles.detailValue, { color: colors.text }]}>{Math.ceil(route.distance * 2)} {t('routes.minutes')}</Text>
-                </View>
+                <Text style={[styles.routeName, { color: colors.text, flex: 1, marginLeft: 10 }]}>{route.name}</Text>
+                <Icon name="chevron-right" size={24} color="#9CA3AF" />
               </View>
-            )}
-          </TouchableOpacity>
-        ))}
+
+              <View style={styles.routeFooter}>
+                <Icon name="bus-stop-covered" size={14} color="#2A9D8F" />
+                <Text style={[styles.routeDistance, { color: colors.subtext, marginLeft: 4 }]}>
+                  {route.stops?.length || 0} Stops on this route
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -1649,6 +1650,7 @@ const AppNavigator = () => {
           <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
           <Stack.Screen name="Scan" component={NFCScanScreen} />
           <Stack.Screen name="BlockNFC" component={BlockNFCScreen} />
+          <Stack.Screen name="RouteDetail" component={RouteDetailScreen} />
         </>
       ) : (
         <>
@@ -1665,11 +1667,13 @@ export default function App() {
   return (
     <NavigationContainer>
       <LanguageProvider>
-        <ThemeProvider>
-          <AuthProvider>
-            <AppNavigator />
-          </AuthProvider>
-        </ThemeProvider>
+        <GlobalThemeProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <AppNavigator />
+            </AuthProvider>
+          </ThemeProvider>
+        </GlobalThemeProvider>
       </LanguageProvider>
     </NavigationContainer>
   );

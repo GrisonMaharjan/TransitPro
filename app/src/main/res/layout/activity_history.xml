@@ -33,29 +33,19 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/shiftLogsSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/shiftLogsTitle"
-            android:text="OPERATOR 4092 • Route 42"
+            android:text="Bus - • Route -"
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
-
-        <ImageButton
-            android:id="@+id/filterButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/status_indicator_green"
-            android:backgroundTint="#E1E5ED"
-            android:src="@drawable/ic_filter"
-            app:tint="@color/black" />
 
         <ImageButton
             android:id="@+id/downloadButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="8dp"
-            android:layout_toStartOf="@id/filterButton"
+            android:layout_alignParentEnd="true"
             android:background="@drawable/status_indicator_green"
             android:backgroundTint="@color/black"
             android:src="@drawable/ic_download"

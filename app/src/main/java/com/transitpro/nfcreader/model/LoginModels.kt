@@ -16,7 +16,20 @@ data class LoginResponse(
 data class User(
     @SerializedName("busNumber") val busNumber: String,
     @SerializedName("vehicleId") val vehicleId: String?,
-    @SerializedName("depotLocation") val depotLocation: String?
+    @SerializedName("depotLocation") val depotLocation: String?,
+    @SerializedName("assignedRoute") val assignedRoute: RouteInfo?
+)
+
+data class RouteInfo(
+    @SerializedName("name") val name: String,
+    @SerializedName("stops") val stops: List<StopDetail>
+)
+
+data class StopDetail(
+    @SerializedName("name") val name: String,
+    @SerializedName("latitude") val latitude: Double,
+    @SerializedName("longitude") val longitude: Double,
+    @SerializedName("order") val order: Int
 )
 
 // Renaming for clarity if needed, or keeping it consistent with backend

@@ -17,8 +17,11 @@ router.post('/login', async (req, res) => {
     console.log(`Received Bus Number: [${busNumber}]`);
 
     try {
-        // 1. Authenticate the user
-        const user = await BusUser.findOne({ busNumber });
+        // 1. Authenticate the user and populate assigned route with full stop details
+        const user = await BusUser.findOne({ busNumber }).populate({
+            path: 'assignedRoute',
+            populate: { path: 'stops' } // Deep populate to get stop names and coords
+        });
 
         if (!user) {
             console.log(`❌ Login Failed: Bus Number [${busNumber}] not found.`);
@@ -75,7 +78,8 @@ router.post('/login', async (req, res) => {
             user: {
                 busNumber: user.busNumber,
                 vehicleId: user.vehicleId,
-                depotLocation: user.depotLocation
+                depotLocation: user.depotLocation,
+                assignedRoute: user.assignedRoute // Now includes route name and stops
             }
         });
     } catch (error) {

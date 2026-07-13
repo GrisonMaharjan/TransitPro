@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.transitpro.nfcreader.api.RetrofitClient
 import com.transitpro.nfcreader.model.LoginRequest
 import com.transitpro.nfcreader.model.LoginResponse
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -58,10 +59,14 @@ class LoginActivity : AppCompatActivity() {
                         val token = loginResponse?.token
                         println("Session token received: $token")
                         
+                        val gson = Gson()
+                        val routeJson = gson.toJson(loginResponse?.user?.assignedRoute)
+                        
                         prefs.edit().apply {
                             putString("jwt_token", token)
                             putString("bus_number", loginResponse?.user?.busNumber)
                             putString("vehicle_id", loginResponse?.user?.vehicleId)
+                            putString("assigned_route_json", routeJson)
                             apply()
                         }
 
