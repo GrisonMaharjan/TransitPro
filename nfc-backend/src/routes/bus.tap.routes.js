@@ -5,6 +5,7 @@ const BusTrip = require('../models/bus.trip.model');
 const User = require('../models/user.model');
 const Fare = require('../models/fare.model');
 const SeedStop = require('../models/seedstop.model');
+const Transaction = require('../models/transaction.model');
 const { busAuthMiddleware } = require('../middleware/bus.auth.middleware');
 const { decrypt } = require('../utils/encryption');
 
@@ -180,6 +181,16 @@ router.post('/tap', async (req, res) => {
                 longitude
             });
             await tapLog.save();
+
+            // ✅ Create a Transaction for the passenger app history
+            await Transaction.create({
+                user: passenger._id,
+                type: 'tap-out',
+                sourceStop: activeTrip.tapInStop,
+                destinationStop: stop,
+                fare: calculatedFare,
+                busNumber: busId
+            });
 
             return res.status(200).json({
                 success: true,

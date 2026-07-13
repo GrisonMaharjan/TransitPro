@@ -14,6 +14,8 @@ TransitPro is a secure, NFC-based public transportation management system. It fe
     *   **Full Fare Matrix**: Backend now automatically generates and covers all possible intermediate stop combinations (e.g., Lagankhel to Jawalakhel), eliminating 404 errors for partial trips.
     *   **High-Performance Lookups**: Optimized fare search to query the centralized `seed-stops` collection for instant results.
     *   **Route Stop Timeline**: Added a vertical visualization of all stops on a selected route with color-coded start/end indicators.
+    *   **Privacy Mode**: Implemented a "Hide/Show" feature (eye icon) to mask sensitive data like Wallet Balance, Card Number, and User IDs on the Dashboard and Profile.
+    *   **Understandable Timestamps**: Refactored the "Last Recharge" field to show human-readable dates (e.g., "13 Jul 2026") instead of raw technical timestamps.
 *   **Data Integrity & Privacy**:
     *   **History Isolation**: Conductor shift logs are now strictly filtered by **Bus ID**.
     *   **Today's Logs Only**: Optimized the shift log view to only display taps from the current calendar day for better shift management.
@@ -42,6 +44,7 @@ TransitPro is a secure, NFC-based public transportation management system. It fe
 ### 💳 Transaction & Data Management
 *   **Precise Fare Matrix**: Replaced distance estimates with a dedicated **Fare Matrix** system. Fares are now pulled from a database collection seeded from a real-world Sajha Yatayat price list.
 *   **Automatic Balance Deduction**: The system now verifies passenger balance before Tap-In and automatically deducts the precise stage-based fare upon Tap-Out.
+*   **Transaction History Integration**: Tap-Out events now generate real-time transaction records. Passengers can view their individual trip history, including boarding/alighting stops and fare amounts, directly in their app.
 *   **Reward Points System**: Passengers now earn reward points based on trip fares (e.g., 2 points for fares > Rs. 30). These points build user "trust" within the system.
 *   **Refined Emergency Credit**: Passengers with insufficient balance (below Rs. 18) can take a one-time "Rescue Ride" if they have 5+ reward points. The system allows a debt of up to Rs. 100, which must be cleared before the next trip.
 *   **Automated ID Generation**: Passengers are now automatically assigned unique, non-replicable **UserIds** and **NFCIDs** during registration.

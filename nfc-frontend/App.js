@@ -751,6 +751,7 @@ const DashboardScreen = ({ navigation }) => {
   const [transactions, setTransactions] = useState([]);
   const [monthlyStats, setMonthlyStats] = useState({ totalTrips: 0, totalSpent: 0, mostUsedRoute: '-' });
   const [isLoading, setIsLoading] = useState(true);
+  const [isBalanceVisible, setIsBalanceVisible] = useState(true);
 
   useEffect(() => {
     loadDashboardData();
@@ -768,7 +769,15 @@ const DashboardScreen = ({ navigation }) => {
       // Backend wallet: { balance, cardNumber, lastRechargeDate }
       setBalance(walletRes.balance);
       setCardNumber(walletRes.cardNumber || '');
-      setLastRechargeDate(walletRes.lastRechargeDate || '');
+
+      // Format the ISO date to a human-readable string
+      if (walletRes.lastRechargeDate) {
+        const date = new Date(walletRes.lastRechargeDate);
+        const options = { day: '2-digit', month: 'short', year: 'numeric' };
+        setLastRechargeDate(date.toLocaleDateString('en-IN', options));
+      } else {
+        setLastRechargeDate('—');
+      }
       // Backend transactions: { transactions, monthlyTotal, monthlySpent, mostUsedRoute }
       setTransactions(transactionsRes.transactions || []);
       setMonthlyStats({
@@ -827,14 +836,19 @@ const DashboardScreen = ({ navigation }) => {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.balanceCard}>
-          <Text style={styles.balanceLabel}>{t('dashboard.wallet_balance')}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text style={styles.balanceLabel}>{t('dashboard.wallet_balance')}</Text>
+            <TouchableOpacity onPress={() => setIsBalanceVisible(!isBalanceVisible)}>
+              <Icon name={isBalanceVisible ? "eye-outline" : "eye-off-outline"} size={20} color="#FFFFFFCC" />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.balanceAmount}>
-            NPR {balance !== null ? balance.toLocaleString() : '—'}
+            {isBalanceVisible ? `NPR ${balance !== null ? balance.toLocaleString() : '—'}` : 'NPR ••••••'}
           </Text>
           <View style={styles.cardFooter}>
             <View>
               <Text style={styles.cardFooterLabel}>{t('dashboard.card_number')}</Text>
-              <Text style={styles.cardFooterValue}>{cardNumber || '—'}</Text>
+              <Text style={styles.cardFooterValue}>{isBalanceVisible ? (cardNumber || '—') : '••••••••••••'}</Text>
             </View>
             <View>
               <Text style={styles.cardFooterLabel}>{t('dashboard.last_recharge')}</Text>

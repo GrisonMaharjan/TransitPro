@@ -30,6 +30,7 @@ export default function ProfileScreen({ navigation }) {
   const [balance, setBalance] = useState(0);
   const [cardNumber, setCardNumber] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     let mounted = true;
@@ -99,7 +100,9 @@ export default function ProfileScreen({ navigation }) {
           <Icon name="arrow-left" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.text }]}>{t('profile.title')}</Text>
-        <View style={{ width: 24 }} />
+        <TouchableOpacity onPress={() => setIsVisible(!isVisible)}>
+          <Icon name={isVisible ? "eye-outline" : "eye-off-outline"} size={24} color={colors.text} />
+        </TouchableOpacity>
       </View>
 
       {isLoading ? (
@@ -119,11 +122,11 @@ export default function ProfileScreen({ navigation }) {
             <View style={styles.idContainer}>
               <View style={[styles.idBadge, { backgroundColor: colors.surfaceGray }]}>
                 <Text style={[styles.idLabel, { color: colors.textSecondary }]}>USER ID: </Text>
-                <Text style={[styles.idValue, { color: colors.primary }]}>{user?.userId || 'N/A'}</Text>
+                <Text style={[styles.idValue, { color: colors.primary }]}>{isVisible ? (user?.userId || 'N/A') : '••••••••'}</Text>
               </View>
               <View style={[styles.idBadge, { backgroundColor: colors.surfaceGray }]}>
                 <Text style={[styles.idLabel, { color: colors.textSecondary }]}>NFC ID: </Text>
-                <Text style={[styles.idValue, { color: colors.primary }]}>{user?.nfcUid || 'N/A'}</Text>
+                <Text style={[styles.idValue, { color: colors.primary }]}>{isVisible ? (user?.nfcUid || 'N/A') : '••••••••'}</Text>
               </View>
             </View>
           </View>
@@ -133,7 +136,7 @@ export default function ProfileScreen({ navigation }) {
               <Icon name="wallet" size={24} color={colors.primary} />
               <View>
                 <Text style={[styles.walletInfoLabel, { color: colors.textSecondary }]}>{t('profile.wallet_balance')}</Text>
-                <Text style={[styles.walletInfoValue, { color: colors.text }]}>NPR {Number(balance || 0).toLocaleString()}</Text>
+                <Text style={[styles.walletInfoValue, { color: colors.text }]}>{isVisible ? `NPR ${Number(balance || 0).toLocaleString()}` : 'NPR ••••••'}</Text>
               </View>
             </View>
             <View style={[styles.walletDivider, { backgroundColor: colors.divider }]} />
