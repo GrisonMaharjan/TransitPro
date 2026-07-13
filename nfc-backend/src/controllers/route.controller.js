@@ -1,9 +1,11 @@
 const Route = require('../models/route.model');
 const Fare = require('../models/fare.model');
+const SeedStop = require('../models/seedstop.model');
 
 // ==========================
 // CREATE ROUTE
 // ==========================
+// ... (rest of createRoute)
 exports.createRoute = async (req, res) => {
     try {
         const { name, stops } = req.body;
@@ -58,6 +60,7 @@ exports.getRouteById = async (req, res) => {
 /**
  * GET /api/routes/:id/fare?from=StopA&to=StopB
  * Fetches fare between two stops for a specific route.
+ * Optimized to use the 'seed-stops' collection.
  */
 exports.getRouteFare = async (req, res) => {
     try {
@@ -68,24 +71,49 @@ exports.getRouteFare = async (req, res) => {
             return res.status(400).json({ message: 'Source and destination stops are required' });
         }
 
-        const fareRecord = await Fare.findOne({
-            routeId: id,
-            sourceStop: from,
-            destinationStop: to
-        });
+        // 1. Get the route name first to search in seed-stops
+        const route = await Route.findById(id);
+        if (!route) {
+            return res.status(404).json({ message: 'Route not found' });
+        }
 
-        if (!fareRecord) {
+        // 2. Search in 'seed-stops' collection as requested
+        const seedData = await SeedStop.findOne({ routeName: route.name });
+
+        let fareAmount = null;
+
+        if (seedData && seedData.fares) {
+            const match = seedData.fares.find(f => f.from === from && f.to === to);
+            if (match) {
+                fareAmount = match.price;
+            }
+        }
+
+        // 3. Fallback to individual 'fares' collection if not in seed-stops
+        if (fareAmount === null) {
+            const fareRecord = await Fare.findOne({
+                routeId: id,
+                sourceStop: from,
+                destinationStop: to
+            });
+            if (fareRecord) {
+                fareAmount = fareRecord.fare;
+            }
+        }
+
+        if (fareAmount === null) {
             return res.status(404).json({
                 message: `No fare record found from ${from} to ${to} for this route.`,
-                defaultFare: 18 // Fallback to minimum fare
+                defaultFare: 18
             });
         }
 
         res.json({
             routeId: id,
+            routeName: route.name,
             from,
             to,
-            fare: fareRecord.fare
+            fare: fareAmount
         });
     } catch (error) {
         res.status(500).json({ message: error.message });

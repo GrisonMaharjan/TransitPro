@@ -1,0 +1,1324 @@
+[
+  {
+  "routeName": "Sajha Yatayat Route 1 (Bungamati - Ratnapark)",
+  "stops": ["Bungamati", "Chhyasikot", "Sainbu", "Bhaisepati", "Nakhu Chowk", "Ekantakuna", "Mahalaxmisthan Chowk", "Lagankhel", "Kumaripati", "Jawalakhel", "Pulchowk Damkal", "Krishna Galli", "Kupondole", "N.A.C", "Ratnapark"],
+  "fares": [
+    {
+      "from": "Bungamati",
+      "to": "Chhyasikot",
+      "price": 18
+    },
+    {
+      "from": "Bungamati",
+      "to": "Sainbu",
+      "price": 18
+    },
+    {
+      "from": "Bungamati",
+      "to": "Bhaisepati",
+      "price": 18
+    },
+    {
+      "from": "Bungamati",
+      "to": "Nakhu Chowk",
+      "price": 18
+    },
+    {
+      "from": "Bungamati",
+      "to": "Ekantakuna",
+      "price": 18
+    },
+    {
+      "from": "Bungamati",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 25
+    },
+    {
+      "from": "Bungamati",
+      "to": "Lagankhel",
+      "price": 25
+    },
+    {
+      "from": "Bungamati",
+      "to": "Kumaripati",
+      "price": 25
+    },
+    {
+      "from": "Bungamati",
+      "to": "Jawalakhel",
+      "price": 30
+    },
+    {
+      "from": "Bungamati",
+      "to": "Pulchowk Damkal",
+      "price": 30
+    },
+    {
+      "from": "Bungamati",
+      "to": "Krishna Galli",
+      "price": 30
+    },
+    {
+      "from": "Bungamati",
+      "to": "Kupondole",
+      "price": 30
+    },
+    {
+      "from": "Bungamati",
+      "to": "N.A.C",
+      "price": 30
+    },
+    {
+      "from": "Bungamati",
+      "to": "Ratnapark",
+      "price": 30
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Bungamati",
+      "price": 18
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Sainbu",
+      "price": 18
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Bhaisepati",
+      "price": 18
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Nakhu Chowk",
+      "price": 18
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Ekantakuna",
+      "price": 18
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 25
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Lagankhel",
+      "price": 25
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Kumaripati",
+      "price": 25
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Jawalakhel",
+      "price": 30
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Pulchowk Damkal",
+      "price": 30
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Krishna Galli",
+      "price": 30
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Kupondole",
+      "price": 30
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "N.A.C",
+      "price": 30
+    },
+    {
+      "from": "Chhyasikot",
+      "to": "Ratnapark",
+      "price": 30
+    },
+    {
+      "from": "Sainbu",
+      "to": "Bungamati",
+      "price": 18
+    },
+    {
+      "from": "Sainbu",
+      "to": "Chhyasikot",
+      "price": 18
+    },
+    {
+      "from": "Sainbu",
+      "to": "Bhaisepati",
+      "price": 18
+    },
+    {
+      "from": "Sainbu",
+      "to": "Nakhu Chowk",
+      "price": 18
+    },
+    {
+      "from": "Sainbu",
+      "to": "Ekantakuna",
+      "price": 18
+    },
+    {
+      "from": "Sainbu",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 25
+    },
+    {
+      "from": "Sainbu",
+      "to": "Lagankhel",
+      "price": 25
+    },
+    {
+      "from": "Sainbu",
+      "to": "Kumaripati",
+      "price": 25
+    },
+    {
+      "from": "Sainbu",
+      "to": "Jawalakhel",
+      "price": 25
+    },
+    {
+      "from": "Sainbu",
+      "to": "Pulchowk Damkal",
+      "price": 25
+    },
+    {
+      "from": "Sainbu",
+      "to": "Krishna Galli",
+      "price": 30
+    },
+    {
+      "from": "Sainbu",
+      "to": "Kupondole",
+      "price": 30
+    },
+    {
+      "from": "Sainbu",
+      "to": "N.A.C",
+      "price": 30
+    },
+    {
+      "from": "Sainbu",
+      "to": "Ratnapark",
+      "price": 30
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Bungamati",
+      "price": 18
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Chhyasikot",
+      "price": 18
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Sainbu",
+      "price": 18
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Nakhu Chowk",
+      "price": 18
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Ekantakuna",
+      "price": 18
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 18
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Lagankhel",
+      "price": 25
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Kumaripati",
+      "price": 18
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Jawalakhel",
+      "price": 25
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Pulchowk Damkal",
+      "price": 25
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Krishna Galli",
+      "price": 30
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Kupondole",
+      "price": 30
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "N.A.C",
+      "price": 30
+    },
+    {
+      "from": "Bhaisepati",
+      "to": "Ratnapark",
+      "price": 30
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Bungamati",
+      "price": 18
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Chhyasikot",
+      "price": 18
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Sainbu",
+      "price": 18
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Bhaisepati",
+      "price": 18
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Ekantakuna",
+      "price": 18
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 18
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Lagankhel",
+      "price": 18
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Kumaripati",
+      "price": 25
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Jawalakhel",
+      "price": 25
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Pulchowk Damkal",
+      "price": 25
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Krishna Galli",
+      "price": 25
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Kupondole",
+      "price": 25
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "N.A.C",
+      "price": 30
+    },
+    {
+      "from": "Nakhu Chowk",
+      "to": "Ratnapark",
+      "price": 30
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Bungamati",
+      "price": 18
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Chhyasikot",
+      "price": 18
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Sainbu",
+      "price": 18
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Bhaisepati",
+      "price": 18
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Nakhu Chowk",
+      "price": 18
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 18
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Lagankhel",
+      "price": 18
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Kumaripati",
+      "price": 18
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Jawalakhel",
+      "price": 25
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Pulchowk Damkal",
+      "price": 25
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Krishna Galli",
+      "price": 25
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Kupondole",
+      "price": 25
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "N.A.C",
+      "price": 25
+    },
+    {
+      "from": "Ekantakuna",
+      "to": "Ratnapark",
+      "price": 25
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Bungamati",
+      "price": 25
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Chhyasikot",
+      "price": 25
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Sainbu",
+      "price": 25
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Bhaisepati",
+      "price": 18
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Nakhu Chowk",
+      "price": 18
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Ekantakuna",
+      "price": 18
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Lagankhel",
+      "price": 18
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Kumaripati",
+      "price": 18
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Jawalakhel",
+      "price": 18
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Pulchowk Damkal",
+      "price": 18
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Krishna Galli",
+      "price": 25
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Kupondole",
+      "price": 25
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "N.A.C",
+      "price": 25
+    },
+    {
+      "from": "Mahalaxmisthan Chowk",
+      "to": "Ratnapark",
+      "price": 25
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Bungamati",
+      "price": 25
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Chhyasikot",
+      "price": 25
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Sainbu",
+      "price": 25
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Bhaisepati",
+      "price": 25
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Nakhu Chowk",
+      "price": 18
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Ekantakuna",
+      "price": 18
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 18
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Kumaripati",
+      "price": 18
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Jawalakhel",
+      "price": 18
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Pulchowk Damkal",
+      "price": 18
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Krishna Galli",
+      "price": 18
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Kupondole",
+      "price": 25
+    },
+    {
+      "from": "Lagankhel",
+      "to": "N.A.C",
+      "price": 25
+    },
+    {
+      "from": "Lagankhel",
+      "to": "Ratnapark",
+      "price": 25
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Bungamati",
+      "price": 25
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Chhyasikot",
+      "price": 25
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Sainbu",
+      "price": 25
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Bhaisepati",
+      "price": 25
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Nakhu Chowk",
+      "price": 25
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Ekantakuna",
+      "price": 18
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 18
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Lagankhel",
+      "price": 18
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Jawalakhel",
+      "price": 18
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Pulchowk Damkal",
+      "price": 18
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Krishna Galli",
+      "price": 18
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Kupondole",
+      "price": 18
+    },
+    {
+      "from": "Kumaripati",
+      "to": "N.A.C",
+      "price": 18
+    },
+    {
+      "from": "Kumaripati",
+      "to": "Ratnapark",
+      "price": 25
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Bungamati",
+      "price": 30
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Chhyasikot",
+      "price": 30
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Sainbu",
+      "price": 25
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Bhaisepati",
+      "price": 25
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Nakhu Chowk",
+      "price": 25
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Ekantakuna",
+      "price": 25
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 18
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Lagankhel",
+      "price": 18
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Kumaripati",
+      "price": 18
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Pulchowk Damkal",
+      "price": 18
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Krishna Galli",
+      "price": 18
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Kupondole",
+      "price": 18
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "N.A.C",
+      "price": 18
+    },
+    {
+      "from": "Jawalakhel",
+      "to": "Ratnapark",
+      "price": 18
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Bungamati",
+      "price": 30
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Chhyasikot",
+      "price": 30
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Sainbu",
+      "price": 25
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Bhaisepati",
+      "price": 25
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Nakhu Chowk",
+      "price": 25
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Ekantakuna",
+      "price": 25
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 18
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Lagankhel",
+      "price": 18
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Kumaripati",
+      "price": 18
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Jawalakhel",
+      "price": 18
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Krishna Galli",
+      "price": 18
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Kupondole",
+      "price": 18
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "N.A.C",
+      "price": 18
+    },
+    {
+      "from": "Pulchowk Damkal",
+      "to": "Ratnapark",
+      "price": 18
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Bungamati",
+      "price": 30
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Chhyasikot",
+      "price": 30
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Sainbu",
+      "price": 30
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Bhaisepati",
+      "price": 30
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Nakhu Chowk",
+      "price": 25
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Ekantakuna",
+      "price": 25
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 25
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Lagankhel",
+      "price": 18
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Kumaripati",
+      "price": 18
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Jawalakhel",
+      "price": 18
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Pulchowk Damkal",
+      "price": 18
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Kupondole",
+      "price": 18
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "N.A.C",
+      "price": 18
+    },
+    {
+      "from": "Krishna Galli",
+      "to": "Ratnapark",
+      "price": 18
+    },
+    {
+      "from": "Kupondole",
+      "to": "Bungamati",
+      "price": 30
+    },
+    {
+      "from": "Kupondole",
+      "to": "Chhyasikot",
+      "price": 30
+    },
+    {
+      "from": "Kupondole",
+      "to": "Sainbu",
+      "price": 30
+    },
+    {
+      "from": "Kupondole",
+      "to": "Bhaisepati",
+      "price": 30
+    },
+    {
+      "from": "Kupondole",
+      "to": "Nakhu Chowk",
+      "price": 25
+    },
+    {
+      "from": "Kupondole",
+      "to": "Ekantakuna",
+      "price": 25
+    },
+    {
+      "from": "Kupondole",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 25
+    },
+    {
+      "from": "Kupondole",
+      "to": "Lagankhel",
+      "price": 25
+    },
+    {
+      "from": "Kupondole",
+      "to": "Kumaripati",
+      "price": 18
+    },
+    {
+      "from": "Kupondole",
+      "to": "Jawalakhel",
+      "price": 18
+    },
+    {
+      "from": "Kupondole",
+      "to": "Pulchowk Damkal",
+      "price": 18
+    },
+    {
+      "from": "Kupondole",
+      "to": "Krishna Galli",
+      "price": 18
+    },
+    {
+      "from": "Kupondole",
+      "to": "N.A.C",
+      "price": 18
+    },
+    {
+      "from": "Kupondole",
+      "to": "Ratnapark",
+      "price": 18
+    },
+    {
+      "from": "N.A.C",
+      "to": "Bungamati",
+      "price": 30
+    },
+    {
+      "from": "N.A.C",
+      "to": "Chhyasikot",
+      "price": 30
+    },
+    {
+      "from": "N.A.C",
+      "to": "Sainbu",
+      "price": 30
+    },
+    {
+      "from": "N.A.C",
+      "to": "Bhaisepati",
+      "price": 30
+    },
+    {
+      "from": "N.A.C",
+      "to": "Nakhu Chowk",
+      "price": 30
+    },
+    {
+      "from": "N.A.C",
+      "to": "Ekantakuna",
+      "price": 25
+    },
+    {
+      "from": "N.A.C",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 25
+    },
+    {
+      "from": "N.A.C",
+      "to": "Lagankhel",
+      "price": 25
+    },
+    {
+      "from": "N.A.C",
+      "to": "Kumaripati",
+      "price": 18
+    },
+    {
+      "from": "N.A.C",
+      "to": "Jawalakhel",
+      "price": 18
+    },
+    {
+      "from": "N.A.C",
+      "to": "Pulchowk Damkal",
+      "price": 18
+    },
+    {
+      "from": "N.A.C",
+      "to": "Krishna Galli",
+      "price": 18
+    },
+    {
+      "from": "N.A.C",
+      "to": "Kupondole",
+      "price": 18
+    },
+    {
+      "from": "N.A.C",
+      "to": "Ratnapark",
+      "price": 18
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Bungamati",
+      "price": 30
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Chhyasikot",
+      "price": 30
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Sainbu",
+      "price": 30
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Bhaisepati",
+      "price": 30
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Nakhu Chowk",
+      "price": 30
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Ekantakuna",
+      "price": 25
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Mahalaxmisthan Chowk",
+      "price": 25
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Lagankhel",
+      "price": 25
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Kumaripati",
+      "price": 25
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Jawalakhel",
+      "price": 18
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Pulchowk Damkal",
+      "price": 18
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Krishna Galli",
+      "price": 18
+    },
+    {
+      "from": "Ratnapark",
+      "to": "Kupondole",
+      "price": 18
+    },
+    {
+      "from": "Ratnapark",
+      "to": "N.A.C",
+      "price": 18
+    }
+  ]
+}
+  
+  ,{
+    "routeName": "Sajha Yatayat Route 2 (Lamatar - Jamal)",
+    "stops": [
+      "Lamatar", "Dungin", "Lubhu", "Sanagaun", "Kamalpokhari", "Imadol Krishnamandir",
+      "KIST Hospital", "Gwarko", "Satdobato", "Lagankhel", "Jawalakhel",
+      "Pulchowk Damkal", "Kupondole", "Tripureshwor", "N.A.C", "Jamal"
+    ],
+    "fares": [
+      { "from": "Lamatar", "to": "Dungin", "price": 18 },
+      { "from": "Lamatar", "to": "Lubhu", "price": 18 },
+      { "from": "Lamatar", "to": "Sanagaun", "price": 18 },
+      { "from": "Lamatar", "to": "Kamalpokhari", "price": 25 },
+      { "from": "Lamatar", "to": "Imadol Krishnamandir", "price": 25 },
+      { "from": "Lamatar", "to": "KIST Hospital", "price": 25 },
+      { "from": "Lamatar", "to": "Gwarko", "price": 25 },
+      { "from": "Lamatar", "to": "Satdobato", "price": 25 },
+      { "from": "Lamatar", "to": "Lagankhel", "price": 25 },
+      { "from": "Lamatar", "to": "Jawalakhel", "price": 30 },
+      { "from": "Lamatar", "to": "Pulchowk Damkal", "price": 30 },
+      { "from": "Lamatar", "to": "Kupondole", "price": 30 },
+      { "from": "Lamatar", "to": "Tripureshwor", "price": 35 },
+      { "from": "Lamatar", "to": "N.A.C", "price": 35 },
+      { "from": "Lamatar", "to": "Jamal", "price": 35 },
+
+      { "from": "Dungin", "to": "Lamatar", "price": 18 },
+      { "from": "Dungin", "to": "Lubhu", "price": 18 },
+      { "from": "Dungin", "to": "Sanagaun", "price": 18 },
+      { "from": "Dungin", "to": "Kamalpokhari", "price": 18 },
+      { "from": "Dungin", "to": "Imadol Krishnamandir", "price": 25 },
+      { "from": "Dungin", "to": "KIST Hospital", "price": 25 },
+      { "from": "Dungin", "to": "Gwarko", "price": 25 },
+      { "from": "Dungin", "to": "Satdobato", "price": 25 },
+      { "from": "Dungin", "to": "Lagankhel", "price": 25 },
+      { "from": "Dungin", "to": "Jawalakhel", "price": 30 },
+      { "from": "Dungin", "to": "Pulchowk Damkal", "price": 30 },
+      { "from": "Dungin", "to": "Kupondole", "price": 30 },
+      { "from": "Dungin", "to": "Tripureshwor", "price": 35 },
+      { "from": "Dungin", "to": "N.A.C", "price": 35 },
+      { "from": "Dungin", "to": "Jamal", "price": 35 },
+
+      { "from": "Lubhu", "to": "Lamatar", "price": 18 },
+      { "from": "Lubhu", "to": "Dungin", "price": 18 },
+      { "from": "Lubhu", "to": "Sanagaun", "price": 18 },
+      { "from": "Lubhu", "to": "Kamalpokhari", "price": 18 },
+      { "from": "Lubhu", "to": "Imadol Krishnamandir", "price": 18 },
+      { "from": "Lubhu", "to": "KIST Hospital", "price": 25 },
+      { "from": "Lubhu", "to": "Gwarko", "price": 25 },
+      { "from": "Lubhu", "to": "Satdobato", "price": 25 },
+      { "from": "Lubhu", "to": "Lagankhel", "price": 25 },
+      { "from": "Lubhu", "to": "Jawalakhel", "price": 25 },
+      { "from": "Lubhu", "to": "Pulchowk Damkal", "price": 30 },
+      { "from": "Lubhu", "to": "Kupondole", "price": 30 },
+      { "from": "Lubhu", "to": "Tripureshwor", "price": 35 },
+      { "from": "Lubhu", "to": "N.A.C", "price": 35 },
+      { "from": "Lubhu", "to": "Jamal", "price": 35 },
+
+      { "from": "Sanagaun", "to": "Lamatar", "price": 18 },
+      { "from": "Sanagaun", "to": "Dungin", "price": 18 },
+      { "from": "Sanagaun", "to": "Lubhu", "price": 18 },
+      { "from": "Sanagaun", "to": "Kamalpokhari", "price": 18 },
+      { "from": "Sanagaun", "to": "Imadol Krishnamandir", "price": 18 },
+      { "from": "Sanagaun", "to": "KIST Hospital", "price": 18 },
+      { "from": "Sanagaun", "to": "Gwarko", "price": 25 },
+      { "from": "Sanagaun", "to": "Satdobato", "price": 25 },
+      { "from": "Sanagaun", "to": "Lagankhel", "price": 25 },
+      { "from": "Sanagaun", "to": "Jawalakhel", "price": 25 },
+      { "from": "Sanagaun", "to": "Pulchowk Damkal", "price": 30 },
+      { "from": "Sanagaun", "to": "Kupondole", "price": 30 },
+      { "from": "Sanagaun", "to": "Tripureshwor", "price": 30 },
+      { "from": "Sanagaun", "to": "N.A.C", "price": 30 },
+      { "from": "Sanagaun", "to": "Jamal", "price": 30 },
+      
+      { "from": "Kamalpokhari", "to": "Lamatar", "price": 25 },
+      { "from": "Kamalpokhari", "to": "Dungin", "price": 18 },
+      { "from": "Kamalpokhari", "to": "Lubhu", "price": 18 },
+      { "from": "Kamalpokhari", "to": "Sanagaun", "price": 18 },
+      { "from": "Kamalpokhari", "to": "Imadol Krishnamandir", "price": 18 },
+      { "from": "Kamalpokhari", "to": "KIST Hospital", "price": 18 },
+      { "from": "Kamalpokhari", "to": "Gwarko", "price": 18 },
+      { "from": "Kamalpokhari", "to": "Satdobato", "price": 25 },
+      { "from": "Kamalpokhari", "to": "Lagankhel", "price": 25 },
+      { "from": "Kamalpokhari", "to": "Jawalakhel", "price": 25 },
+      { "from": "Kamalpokhari", "to": "Pulchowk Damkal", "price": 30 },
+      { "from": "Kamalpokhari", "to": "Kupondole", "price": 30 },
+      { "from": "Kamalpokhari", "to": "Tripureshwor", "price": 30 },
+      { "from": "Kamalpokhari", "to": "N.A.C", "price": 30 },
+      { "from": "Kamalpokhari", "to": "Jamal", "price": 30 },
+
+      { "from": "Imadol Krishnamandir", "to": "Lamatar", "price": 25 },
+      { "from": "Imadol Krishnamandir", "to": "Dungin", "price": 25 },
+      { "from": "Imadol Krishnamandir", "to": "Lubhu", "price": 18 },
+      { "from": "Imadol Krishnamandir", "to": "Sanagaun", "price": 18 },
+      { "from": "Imadol Krishnamandir", "to": "Kamalpokhari", "price": 18 },
+      { "from": "Imadol Krishnamandir", "to": "KIST Hospital", "price": 18 },
+      { "from": "Imadol Krishnamandir", "to": "Gwarko", "price": 18 },
+      { "from": "Imadol Krishnamandir", "to": "Satdobato", "price": 18 },
+      { "from": "Imadol Krishnamandir", "to": "Lagankhel", "price": 25 },
+      { "from": "Imadol Krishnamandir", "to": "Jawalakhel", "price": 25 },
+      { "from": "Imadol Krishnamandir", "to": "Pulchowk Damkal", "price": 30 },
+      { "from": "Imadol Krishnamandir", "to": "Kupondole", "price": 30 },
+      { "from": "Imadol Krishnamandir", "to": "Tripureshwor", "price": 30 },
+      { "from": "Imadol Krishnamandir", "to": "N.A.C", "price": 30 },
+      { "from": "Imadol Krishnamandir", "to": "Jamal", "price": 30 },
+
+      { "from": "KIST Hospital", "to": "Lamatar", "price": 25 },
+      { "from": "KIST Hospital", "to": "Dungin", "price": 25 },
+      { "from": "KIST Hospital", "to": "Lubhu", "price": 25 },
+      { "from": "KIST Hospital", "to": "Sanagaun", "price": 18 },
+      { "from": "KIST Hospital", "to": "Kamalpokhari", "price": 18 },
+      { "from": "KIST Hospital", "to": "Imadol Krishnamandir", "price": 18 },
+      { "from": "KIST Hospital", "to": "Gwarko", "price": 18 },
+      { "from": "KIST Hospital", "to": "Satdobato", "price": 18 },
+      { "from": "KIST Hospital", "to": "Lagankhel", "price": 18 },
+      { "from": "KIST Hospital", "to": "Jawalakhel", "price": 25 },
+      { "from": "KIST Hospital", "to": "Pulchowk Damkal", "price": 25 },
+      { "from": "KIST Hospital", "to": "Kupondole", "price": 25 },
+      { "from": "KIST Hospital", "to": "Tripureshwor", "price": 25 },
+      { "from": "KIST Hospital", "to": "N.A.C", "price": 30 },
+      { "from": "KIST Hospital", "to": "Jamal", "price": 30 },
+
+      { "from": "Gwarko", "to": "Lamatar", "price": 25 },
+      { "from": "Gwarko", "to": "Dungin", "price": 25 },
+      { "from": "Gwarko", "to": "Lubhu", "price": 25 },
+      { "from": "Gwarko", "to": "Sanagaun", "price": 25 },
+      { "from": "Gwarko", "to": "Kamalpokhari", "price": 18 },
+      { "from": "Gwarko", "to": "Imadol Krishnamandir", "price": 18 },
+      { "from": "Gwarko", "to": "KIST Hospital", "price": 18 },
+      { "from": "Gwarko", "to": "Satdobato", "price": 18 },
+      { "from": "Gwarko", "to": "Lagankhel", "price": 18 },
+      { "from": "Gwarko", "to": "Jawalakhel", "price": 25 },
+      { "from": "Gwarko", "to": "Pulchowk Damkal", "price": 25 },
+      { "from": "Gwarko", "to": "Kupondole", "price": 25 },
+      { "from": "Gwarko", "to": "Tripureshwor", "price": 25 },
+      { "from": "Gwarko", "to": "N.A.C", "price": 25 },
+      { "from": "Gwarko", "to": "Jamal", "price": 30 },
+
+      { "from": "Satdobato", "to": "Lamatar", "price": 25 },
+      { "from": "Satdobato", "to": "Dungin", "price": 25 },
+      { "from": "Satdobato", "to": "Lubhu", "price": 25 },
+      { "from": "Satdobato", "to": "Sanagaun", "price": 25 },
+      { "from": "Satdobato", "to": "Kamalpokhari", "price": 25 },
+      { "from": "Satdobato", "to": "Imadol Krishnamandir", "price": 18 },
+      { "from": "Satdobato", "to": "KIST Hospital", "price": 18 },
+      { "from": "Satdobato", "to": "Gwarko", "price": 18 },
+      { "from": "Satdobato", "to": "Lagankhel", "price": 18 },
+      { "from": "Satdobato", "to": "Jawalakhel", "price": 18 },
+      { "from": "Satdobato", "to": "Pulchowk Damkal", "price": 25 },
+      { "from": "Satdobato", "to": "Kupondole", "price": 25 },
+      { "from": "Satdobato", "to": "Tripureshwor", "price": 25 },
+      { "from": "Satdobato", "to": "N.A.C", "price": 25 },
+      { "from": "Satdobato", "to": "Jamal", "price": 25 },
+
+      { "from": "Lagankhel", "to": "Lamatar", "price": 25 },
+      { "from": "Lagankhel", "to": "Dungin", "price": 25 },
+      { "from": "Lagankhel", "to": "Lubhu", "price": 25 },
+      { "from": "Lagankhel", "to": "Sanagaun", "price": 25 },
+      { "from": "Lagankhel", "to": "Kamalpokhari", "price": 25 },
+      { "from": "Lagankhel", "to": "Imadol Krishnamandir", "price": 25 },
+      { "from": "Lagankhel", "to": "KIST Hospital", "price": 18 },
+      { "from": "Lagankhel", "to": "Gwarko", "price": 18 },
+      { "from": "Lagankhel", "to": "Satdobato", "price": 18 },
+      { "from": "Lagankhel", "to": "Jawalakhel", "price": 18 },
+      { "from": "Lagankhel", "to": "Pulchowk Damkal", "price": 18 },
+      { "from": "Lagankhel", "to": "Kupondole", "price": 18 },
+      { "from": "Lagankhel", "to": "Tripureshwor", "price": 25 },
+      { "from": "Lagankhel", "to": "N.A.C", "price": 25 },
+      { "from": "Lagankhel", "to": "Jamal", "price": 25 },
+
+      { "from": "Jawalakhel", "to": "Lamatar", "price": 30 },
+      { "from": "Jawalakhel", "to": "Dungin", "price": 30 },
+      { "from": "Jawalakhel", "to": "Lubhu", "price": 25 },
+      { "from": "Jawalakhel", "to": "Sanagaun", "price": 25 },
+      { "from": "Jawalakhel", "to": "Kamalpokhari", "price": 25 },
+      { "from": "Jawalakhel", "to": "Imadol Krishnamandir", "price": 25 },
+      { "from": "Jawalakhel", "to": "KIST Hospital", "price": 25 },
+      { "from": "Jawalakhel", "to": "Gwarko", "price": 25 },
+      { "from": "Jawalakhel", "to": "Satdobato", "price": 18 },
+      { "from": "Jawalakhel", "to": "Lagankhel", "price": 18 },
+      { "from": "Jawalakhel", "to": "Pulchowk Damkal", "price": 18 },
+      { "from": "Jawalakhel", "to": "Kupondole", "price": 18 },
+      { "from": "Jawalakhel", "to": "Tripureshwor", "price": 18 },
+      { "from": "Jawalakhel", "to": "N.A.C", "price": 18 },
+      { "from": "Jawalakhel", "to": "Jamal", "price": 25 },
+
+      { "from": "Pulchowk Damkal", "to": "Lamatar", "price": 30 },
+      { "from": "Pulchowk Damkal", "to": "Dungin", "price": 30 },
+      { "from": "Pulchowk Damkal", "to": "Lubhu", "price": 30 },
+      { "from": "Pulchowk Damkal", "to": "Sanagaun", "price": 30 },
+      { "from": "Pulchowk Damkal", "to": "Kamalpokhari", "price": 30 },
+      { "from": "Pulchowk Damkal", "to": "Imadol Krishnamandir", "price": 30 },
+      { "from": "Pulchowk Damkal", "to": "KIST Hospital", "price": 25 },
+      { "from": "Pulchowk Damkal", "to": "Gwarko", "price": 25 },
+      { "from": "Pulchowk Damkal", "to": "Satdobato", "price": 25 },
+      { "from": "Pulchowk Damkal", "to": "Lagankhel", "price": 18 },
+      { "from": "Pulchowk Damkal", "to": "Jawalakhel", "price": 18 },
+      { "from": "Pulchowk Damkal", "to": "Kupondole", "price": 18 },
+      { "from": "Pulchowk Damkal", "to": "Tripureshwor", "price": 18 },
+      { "from": "Pulchowk Damkal", "to": "N.A.C", "price": 18 },
+      { "from": "Pulchowk Damkal", "to": "Jamal", "price": 18 },
+
+      { "from": "Kupondole", "to": "Lamatar", "price": 30 },
+      { "from": "Kupondole", "to": "Dungin", "price": 30 },
+      { "from": "Kupondole", "to": "Lubhu", "price": 30 },
+      { "from": "Kupondole", "to": "Sanagaun", "price": 30 },
+      { "from": "Kupondole", "to": "Kamalpokhari", "price": 30 },
+      { "from": "Kupondole", "to": "Imadol Krishnamandir", "price": 30 },
+      { "from": "Kupondole", "to": "KIST Hospital", "price": 25 },
+      { "from": "Kupondole", "to": "Gwarko", "price": 25 },
+      { "from": "Kupondole", "to": "Satdobato", "price": 25 },
+      { "from": "Kupondole", "to": "Lagankhel", "price": 18 },
+      { "from": "Kupondole", "to": "Jawalakhel", "price": 18 },
+      { "from": "Kupondole", "to": "Pulchowk Damkal", "price": 18 },
+      { "from": "Kupondole", "to": "Tripureshwor", "price": 18 },
+      { "from": "Kupondole", "to": "N.A.C", "price": 18 },
+      { "from": "Kupondole", "to": "Jamal", "price": 18 },
+
+      { "from": "Tripureshwor", "to": "Lamatar", "price": 35 },
+      { "from": "Tripureshwor", "to": "Dungin", "price": 35 },
+      { "from": "Tripureshwor", "to": "Lubhu", "price": 35 },
+      { "from": "Tripureshwor", "to": "Sanagaun", "price": 30 },
+      { "from": "Tripureshwor", "to": "Kamalpokhari", "price": 30 },
+      { "from": "Tripureshwor", "to": "Imadol Krishnamandir", "price": 30 },
+      { "from": "Tripureshwor", "to": "KIST Hospital", "price": 25 },
+      { "from": "Tripureshwor", "to": "Gwarko", "price": 25 },
+      { "from": "Tripureshwor", "to": "Satdobato", "price": 25 },
+      { "from": "Tripureshwor", "to": "Lagankhel", "price": 25 },
+      { "from": "Tripureshwor", "to": "Jawalakhel", "price": 18 },
+      { "from": "Tripureshwor", "to": "Pulchowk Damkal", "price": 18 },
+      { "from": "Tripureshwor", "to": "Kupondole", "price": 18 },
+      { "from": "Tripureshwor", "to": "N.A.C", "price": 18 },
+      { "from": "Tripureshwor", "to": "Jamal", "price": 18 },
+
+      { "from": "N.A.C", "to": "Lamatar", "price": 35 },
+      { "from": "N.A.C", "to": "Dungin", "price": 35 },
+      { "from": "N.A.C", "to": "Lubhu", "price": 35 },
+      { "from": "N.A.C", "to": "Sanagaun", "price": 30 },
+      { "from": "N.A.C", "to": "Kamalpokhari", "price": 30 },
+      { "from": "N.A.C", "to": "Imadol Krishnamandir", "price": 30 },
+      { "from": "N.A.C", "to": "KIST Hospital", "price": 30 },
+      { "from": "N.A.C", "to": "Gwarko", "price": 25 },
+      { "from": "N.A.C", "to": "Satdobato", "price": 25 },
+      { "from": "N.A.C", "to": "Lagankhel", "price": 25 },
+      { "from": "N.A.C", "to": "Jawalakhel", "price": 18 },
+      { "from": "N.A.C", "to": "Pulchowk Damkal", "price": 18 },
+      { "from": "N.A.C", "to": "Kupondole", "price": 18 },
+      { "from": "N.A.C", "to": "Tripureshwor", "price": 18 },
+      { "from": "N.A.C", "to": "Jamal", "price": 18 },
+
+      { "from": "Jamal", "to": "N.A.C", "price": 18 },
+      { "from": "Jamal", "to": "Tripureshwor", "price": 18 },
+      { "from": "Jamal", "to": "Kupondole", "price": 18 },
+      { "from": "Jamal", "to": "Pulchowk Damkal", "price": 18 },
+      { "from": "Jamal", "to": "Jawalakhel", "price": 25 },
+      { "from": "Jamal", "to": "Lagankhel", "price": 25 },
+      { "from": "Jamal", "to": "Satdobato", "price": 25 },
+      { "from": "Jamal", "to": "Gwarko", "price": 30 },
+      { "from": "Jamal", "to": "KIST Hospital", "price": 30 },
+      { "from": "Jamal", "to": "Imadol Krishnamandir", "price": 30 },
+      { "from": "Jamal", "to": "Kamalpokhari", "price": 30 },
+      { "from": "Jamal", "to": "Sanagaun", "price": 30 },
+      { "from": "Jamal", "to": "Lubhu", "price": 35 },
+      { "from": "Jamal", "to": "Dungin", "price": 35 },
+      { "from": "Jamal", "to": "Lamatar", "price": 35 }
+    ]
+  }
+]

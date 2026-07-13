@@ -4,6 +4,7 @@ const BusTap = require('../models/bus.tap.model');
 const BusTrip = require('../models/bus.trip.model');
 const User = require('../models/user.model');
 const Fare = require('../models/fare.model');
+const SeedStop = require('../models/seedstop.model');
 const { busAuthMiddleware } = require('../middleware/bus.auth.middleware');
 const { decrypt } = require('../utils/encryption');
 
@@ -110,12 +111,27 @@ router.post('/tap', async (req, res) => {
             }
 
             // --- PHASE: TAP OUT ---
-            const fareRecord = await Fare.findOne({
-                sourceStop: activeTrip.tapInStop,
-                destinationStop: stop
-            });
+            // 1. Get the bus user's assigned route to find the right fare matrix
+            const busConductor = await require('../models/bus.user.model').findOne({ busNumber: busId }).populate('assignedRoute');
 
-            const calculatedFare = fareRecord ? fareRecord.fare : 18;
+            let calculatedFare = 18; // Default minimum
+
+            if (busConductor && busConductor.assignedRoute) {
+                const seedData = await SeedStop.findOne({ routeName: busConductor.assignedRoute.name });
+                if (seedData && seedData.fares) {
+                    const match = seedData.fares.find(f => f.from === activeTrip.tapInStop && f.to === stop);
+                    if (match) {
+                        calculatedFare = match.price;
+                    }
+                }
+            } else {
+                // Fallback to legacy individual collection
+                const fareRecord = await Fare.findOne({
+                    sourceStop: activeTrip.tapInStop,
+                    destinationStop: stop
+                });
+                if (fareRecord) calculatedFare = fareRecord.fare;
+            }
 
             // 🛑 CREDIT LIMIT CHECK: Max debt allowed is 100
             const potentialBalance = passenger.balance - calculatedFare;

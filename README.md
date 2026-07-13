@@ -11,10 +11,13 @@ TransitPro is a secure, NFC-based public transportation management system. It fe
     *   Android app automatically deep-populates route stops and coordinates upon login, eliminating manual selection.
 *   **Enhanced Passenger Experience**:
     *   **Live Fare Calculator**: Passengers can now select pickup/drop stops on any route to see real-time estimated fares fetched from the backend.
+    *   **Full Fare Matrix**: Backend now automatically generates and covers all possible intermediate stop combinations (e.g., Lagankhel to Jawalakhel), eliminating 404 errors for partial trips.
+    *   **High-Performance Lookups**: Optimized fare search to query the centralized `seed-stops` collection for instant results.
     *   **Route Stop Timeline**: Added a vertical visualization of all stops on a selected route with color-coded start/end indicators.
 *   **Data Integrity & Privacy**:
     *   **History Isolation**: Conductor shift logs are now strictly filtered by **Bus ID**.
     *   **Today's Logs Only**: Optimized the shift log view to only display taps from the current calendar day for better shift management.
+    *   **Collection Alignment**: Integrated backend models with specific MongoDB collections like `routelocation` and `seed-stops` for perfect database structure alignment.
     *   **Unified Seeding**: Implemented `/api/seed-all` to perfectly synchronize stops, routes, and fares in a single transaction.
 
 ### 🛡️ Security & Encryption (Previous Week)

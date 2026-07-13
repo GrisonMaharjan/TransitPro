@@ -40,15 +40,13 @@ app.use(morgan('dev'));
 
 /**
  * Combined seeding route to ensure Stops, Routes, and Fares are perfectly linked.
- * This route:
- * 1. Clears existing data.
- * 2. Seeds all unique stops into 'routelocation'.
- * 3. Creates Route objects with linked Stop IDs.
- * 4. Populates the 'fares' matrix.
+ * This route generates a FULL FARE MATRIX (Permutations) for all intermediate stops.
  */
 app.get('/api/seed-all', async (req, res) => {
     try {
-        // 1. Clear everything to prevent duplicates/orphans
+        console.log('--- Starting Database Re-Seed ---');
+
+        // 1. Clear existing data to prevent duplicates
         await Stop.deleteMany();
         await Route.deleteMany();
         await Fare.deleteMany();
@@ -85,32 +83,68 @@ app.get('/api/seed-all', async (req, res) => {
 
         const insertedStops = await Stop.insertMany(allLocations);
 
-        // 3. Load Route and Fare data from JSON
-        const filePath = path.join(__dirname, '../fares_seed.json');
+        // 3. Load Route Templates from seed_stop.json
+        const filePath = path.join(__dirname, '../seed_stop.json');
+        if (!fs.existsSync(filePath)) {
+            console.error('seed_stop.json missing');
+            return res.status(404).json({ success: false, message: 'seed_stop.json not found' });
+        }
+
         const faresData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
         const routeResults = [];
 
         for (const routeInfo of faresData) {
-            // Find the ObjectIds for the stops in this specific route
-            const stopIds = routeInfo.stops.map(name => {
+            // Find stops in routelocation collection
+            const stopIds = [];
+            for (const name of routeInfo.stops) {
                 const found = insertedStops.find(s => s.name === name);
-                return found ? found._id : null;
-            }).filter(id => id != null);
+                if (found) stopIds.push(found._id);
+            }
 
-            // Create the Route
+            // Create the Route with the EXACT name from your seed file
             const route = await Route.create({
                 name: routeInfo.routeName,
                 stops: stopIds
             });
 
-            // Insert Fares for this route
-            const faresToInsert = routeInfo.fares.map(f => ({
-                routeId: route._id,
-                sourceStop: f.from,
-                destinationStop: f.to,
-                fare: f.price
-            }));
+            // 4. GENERATE FULL FARE MATRIX
+            // We use the manual fares from JSON as priority,
+            // and fill the rest of the matrix mathematically for 100% coverage.
+            const faresToInsert = [];
+            const manualFares = routeInfo.fares || [];
+
+            for (let i = 0; i < routeInfo.stops.length; i++) {
+                for (let j = 0; j < routeInfo.stops.length; j++) {
+                    if (i === j) continue;
+
+                    const fromName = routeInfo.stops[i];
+                    const toName = routeInfo.stops[j];
+
+                    // Check if we have a manual price for this specific pair
+                    const manualMatch = manualFares.find(mf => mf.from === fromName && mf.to === toName);
+
+                    let price;
+                    if (manualMatch) {
+                        price = manualMatch.price;
+                    } else {
+                        // Mathematical Fallback (Sajha Rules)
+                        const stopDistance = Math.abs(i - j);
+                        price = 18;
+                        if (stopDistance >= 13) price = 35;
+                        else if (stopDistance >= 9) price = 30;
+                        else if (stopDistance >= 6) price = 25;
+                    }
+
+                    faresToInsert.push({
+                        routeId: route._id,
+                        sourceStop: fromName,
+                        destinationStop: toName,
+                        fare: price
+                    });
+                }
+            }
+
             await Fare.insertMany(faresToInsert);
 
             routeResults.push({
@@ -122,7 +156,7 @@ app.get('/api/seed-all', async (req, res) => {
 
         res.json({
             success: true,
-            message: 'Database seeded successfully!',
+            message: 'Database seeded with full fare matrix!',
             stopsCreated: insertedStops.length,
             routesCreated: routeResults
         });
@@ -134,23 +168,18 @@ app.get('/api/seed-all', async (req, res) => {
 
 app.get('/api/seed-bususers', async (req, res) => {
     try {
-        // Find the routes first
         const route1 = await Route.findOne({ name: /Route 1/ });
         const route2 = await Route.findOne({ name: /Route 2/ });
 
         if (!route1 || !route2) {
-            return res.status(404).json({
-                success: false,
-                message: 'Routes not found. Please run /api/seed-all first.'
-            });
+            return res.status(404).json({ success: false, message: 'Routes not found. Please run /api/seed-all first.' });
         }
 
-        // Update or create Bus User 0427
         await BusUser.findOneAndUpdate(
             { busNumber: '0427' },
             {
                 busNumber: '0427',
-                password: 'password0427', // As seen in your screenshot
+                password: 'password0427',
                 vehicleId: 'BA. 2. Pa. 060. 0427',
                 depotLocation: 'Pulchowk',
                 assignedRoute: route1._id
@@ -158,12 +187,11 @@ app.get('/api/seed-bususers', async (req, res) => {
             { upsert: true, new: true }
         );
 
-        // Update or create Bus User 0000
         await BusUser.findOneAndUpdate(
             { busNumber: '0000' },
             {
                 busNumber: '0000',
-                password: 'password0000', // As seen in your screenshot
+                password: 'password0000',
                 vehicleId: 'BA. 2. Pa. 060. 0000',
                 depotLocation: 'Pulchowk',
                 assignedRoute: route2._id
@@ -171,14 +199,7 @@ app.get('/api/seed-bususers', async (req, res) => {
             { upsert: true, new: true }
         );
 
-        res.json({
-            success: true,
-            message: 'Bus users allocated to routes successfully.',
-            allocations: [
-                { bus: '0427', route: route1.name },
-                { bus: '0000', route: route2.name }
-            ]
-        });
+        res.json({ success: true, message: 'Bus users allocated correctly.' });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
