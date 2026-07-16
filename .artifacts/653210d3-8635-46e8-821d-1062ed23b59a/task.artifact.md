@@ -1,4 +1,0 @@
-- [x] Research and define test cases for 4-5 features.
-- [x] Implement `BusAppUnitTest.kt` to verify logic.
-- [x] Execute tests and capture logs.
-- [x] Draft the Test Execution Report in markdown tables.
